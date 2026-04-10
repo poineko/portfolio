@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Muhammad Ihsan Al Riawi — Portfolio</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --line: rgba(255,255,255,0.08);
+    --line2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --muted: #888;
+    --hint: #555;
+    --accent: #5B8DEF;
+    --accent2: #7EC8A4;
+    --accent3: #F4A261;
+    --accent4: #C77DFF;
+    --cat-mobile: #5B8DEF;
+    --cat-web: #7EC8A4;
+    --cat-ai: #C77DFF;
+    --cat-ds: #F4A261;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+  }
+  .nav-logo { font-size: 14px; font-weight: 500; letter-spacing: 0.02em; color: var(--text); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 13px; color: var(--muted); transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-size: 12px; font-weight: 500; padding: 6px 16px;
+    border: 0.5px solid var(--line2); border-radius: 20px;
+    color: var(--text); background: transparent; cursor: pointer;
+    transition: background .2s, border-color .2s;
+  }
+  .nav-cta:hover { background: var(--bg3); border-color: var(--accent); color: var(--accent); }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 12px;
+  }
+  h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; }
+  h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+  h3 { font-size: 17px; font-weight: 500; }
+
+  /* HERO */
+  #hero { padding-top: 120px; padding-bottom: 120px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--bg3); border: 0.5px solid var(--line2);
+    border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .hero-title { margin-bottom: 20px; }
+  .hero-title span { color: var(--accent); }
+  .hero-sub {
+    font-size: 17px; color: var(--muted); max-width: 560px;
+    line-height: 1.7; margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff; font-size: 14px; font-weight: 500;
+    padding: 10px 22px; border-radius: 8px; border: none; cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: .85; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--text); font-size: 14px; font-weight: 500;
+    padding: 10px 22px; border-radius: 8px; border: 0.5px solid var(--line2); cursor: pointer;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: var(--line2); background: var(--bg3); }
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--line); border: 0.5px solid var(--line);
+    border-radius: var(--radius-lg); overflow: hidden; margin-top: 72px;
+  }
+  .stat-cell {
+    background: var(--bg2); padding: 24px 20px;
+  }
+  .stat-num { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; color: var(--text); }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ABOUT */
+  #about { border-top: 0.5px solid var(--line); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; margin-top: 48px; }
+  .about-text p { color: var(--muted); margin-bottom: 16px; font-size: 15px; line-height: 1.8; }
+  .about-text p strong { color: var(--text); font-weight: 500; }
+  .about-right {}
+  .about-quote {
+    border-left: 2px solid var(--accent); padding-left: 20px;
+    font-size: 16px; font-style: italic; color: var(--text); line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .about-links { display: flex; flex-direction: column; gap: 8px; }
+  .about-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: var(--bg3);
+    border: 0.5px solid var(--line); border-radius: var(--radius);
+    font-size: 13px; color: var(--muted); transition: border-color .2s, color .2s;
+  }
+  .about-link:hover { border-color: var(--line2); color: var(--text); }
+  .about-link-name { font-weight: 500; color: var(--text); }
+  .about-link span { font-size: 11px; }
+
+  /* PROJECTS */
+  #projects { border-top: 0.5px solid var(--line); }
+  .projects-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+  .filter-btn {
+    font-size: 12px; font-weight: 500; padding: 5px 14px;
+    border-radius: 20px; border: 0.5px solid var(--line2);
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: all .18s;
+  }
+  .filter-btn.active, .filter-btn:hover { color: var(--text); border-color: var(--text); background: var(--bg3); }
+  .filter-btn[data-cat="mobile"].active { border-color: var(--cat-mobile); color: var(--cat-mobile); background: rgba(91,141,239,.1); }
+  .filter-btn[data-cat="web"].active { border-color: var(--cat-web); color: var(--cat-web); background: rgba(126,200,164,.1); }
+  .filter-btn[data-cat="ai"].active { border-color: var(--cat-ai); color: var(--cat-ai); background: rgba(199,125,255,.1); }
+  .filter-btn[data-cat="ds"].active { border-color: var(--cat-ds); color: var(--cat-ds); background: rgba(244,162,97,.1); }
+
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .project-card {
+    background: var(--bg2); border: 0.5px solid var(--line);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transition: border-color .2s, transform .2s; cursor: default;
+  }
+  .project-card:hover { border-color: var(--line2); transform: translateY(-2px); }
+  .project-card.hidden { display: none; }
+
+  .project-thumb {
+    height: 160px; display: flex; align-items: center; justify-content: center;
+    font-size: 36px; position: relative; overflow: hidden;
+  }
+  .project-thumb-icon { font-size: 36px; }
+  .project-body { padding: 20px; }
+  .project-cat-badge {
+    font-size: 10px; font-weight: 500; padding: 2px 8px;
+    border-radius: 20px; display: inline-flex; margin-bottom: 10px;
+  }
+  .badge-mobile { background: rgba(91,141,239,.15); color: #5B8DEF; }
+  .badge-web    { background: rgba(126,200,164,.15); color: #7EC8A4; }
+  .badge-ai     { background: rgba(199,125,255,.15); color: #C77DFF; }
+  .badge-ds     { background: rgba(244,162,97,.15); color: #F4A261; }
+  .project-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .project-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+  .project-tag {
+    font-size: 11px; padding: 2px 7px; border-radius: 4px;
+    background: var(--bg4); color: var(--hint); border: 0.5px solid var(--line);
+  }
+  .project-footer { display: flex; gap: 8px; padding-top: 14px; border-top: 0.5px solid var(--line); }
+  .proj-link {
+    font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border: 0.5px solid var(--line); border-radius: 6px;
+    transition: border-color .15s, color .15s;
+  }
+  .proj-link:hover { border-color: var(--line2); color: var(--text); }
+
+  /* SKILLS */
+  #skills { border-top: 0.5px solid var(--line); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 48px; }
+  .skill-group {
+    background: var(--bg2); border: 0.5px solid var(--line);
+    border-radius: var(--radius-lg); padding: 20px;
+  }
+  .skill-group-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .skill-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .skill-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .skill-name { font-size: 13px; color: var(--muted); }
+  .skill-bar-wrap { flex: 1; height: 2px; background: var(--bg4); border-radius: 2px; }
+  .skill-bar { height: 2px; border-radius: 2px; }
+
+  /* EXPERIENCE */
+  #experience { border-top: 0.5px solid var(--line); }
+  .timeline { margin-top: 48px; position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 8px; bottom: 0;
+    width: 0.5px; background: var(--line2);
+  }
+  .timeline-item { position: relative; margin-bottom: 48px; }
+  .timeline-dot {
+    position: absolute; left: -32px; top: 5px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--bg);
+  }
+  .timeline-period { font-size: 11px; color: var(--hint); margin-bottom: 6px; font-weight: 500; letter-spacing: 0.05em; }
+  .timeline-role { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .timeline-org { font-size: 13px; color: var(--accent); margin-bottom: 10px; }
+  .timeline-bullets { list-style: none; }
+  .timeline-bullets li {
+    font-size: 13px; color: var(--muted); padding-left: 14px; position: relative; margin-bottom: 6px; line-height: 1.6;
+  }
+  .timeline-bullets li::before { content: '–'; position: absolute; left: 0; color: var(--hint); }
+
+  /* CERTS */
+  #certifications { border-top: 0.5px solid var(--line); }
+  .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 48px; }
+  .cert-card {
+    background: var(--bg2); border: 0.5px solid var(--line);
+    border-radius: var(--radius); padding: 18px 20px;
+    transition: border-color .2s;
+  }
+  .cert-card:hover { border-color: var(--line2); }
+  .cert-issuer { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: var(--hint); text-transform: uppercase; margin-bottom: 8px; }
+  .cert-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
+  .cert-year { font-size: 11px; color: var(--hint); }
+
+  /* CONTACT */
+  #contact { border-top: 0.5px solid var(--line); }
+  .contact-wrap { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .contact-intro { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+  .contact-info-list { display: flex; flex-direction: column; gap: 10px; }
+  .contact-info-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--muted);
+  }
+  .contact-info-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--bg3); border: 0.5px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 12px; }
+  .contact-form input, .contact-form textarea {
+    background: var(--bg2); border: 0.5px solid var(--line);
+    border-radius: var(--radius); padding: 10px 14px;
+    color: var(--text); font-size: 14px; font-family: inherit;
+    outline: none; transition: border-color .2s; resize: vertical;
+  }
+  .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
+  .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--hint); }
+  .contact-form textarea { min-height: 110px; }
+  .send-btn {
+    align-self: flex-start; background: var(--accent); color: #fff;
+    font-size: 14px; font-weight: 500; padding: 10px 22px;
+    border: none; border-radius: 8px; cursor: pointer; transition: opacity .2s;
+  }
+  .send-btn:hover { opacity: .85; }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid var(--line); padding: 28px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--hint);
+  }
+
+  /* THUMB COLORS */
+  .thumb-mobile { background: rgba(91,141,239,.08); }
+  .thumb-web    { background: rgba(126,200,164,.08); }
+  .thumb-ai     { background: rgba(199,125,255,.08); }
+  .thumb-ds     { background: rgba(244,162,97,.08); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 64px 20px; }
+    .hero-stats { grid-template-columns: repeat(2,1fr); }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .contact-wrap { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Ihsan.</span>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#certifications">Certs</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="mailto:eliteisan@gmail.com" class="nav-cta">Hire me</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Open to opportunities — Apple Developer Academy 2025
+  </div>
+  <h1 class="hero-title">
+    I build things<br>that <span>matter</span>.
+  </h1>
+  <p class="hero-sub">
+    Data Scientist · AI Engineer · Full Stack Developer<br>
+    Pekanbaru, Indonesia — turning raw data into decisions and ideas into apps.
+  </p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn-primary">View my work ↓</a>
+    <a href="#contact" class="btn-ghost">Get in touch</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-cell">
+      <div class="stat-num"><span>3</span>+</div>
+      <div class="stat-label">Years teaching & mentoring</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num"><span>10</span>+</div>
+      <div class="stat-label">Projects shipped</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num"><span>12</span>+</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num"><span>3.41</span></div>
+      <div class="stat-label">GPA — Informatics Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About me</div>
+  <h2>Engineer. Educator. Builder.</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm an Informatics Engineering graduate from <strong>Universitas Islam Riau</strong> with a deep focus on
+        Artificial Intelligence, Data Science, and full-stack development. For over 3 years I've been both
+        <strong>building and teaching</strong> — running lab sessions for 100+ students across ML, Computer Vision,
+        Web Dev, and Mobile App courses.
+      </p>
+      <p>
+        My engineering philosophy: the best software <strong>empowers people</strong>, not just impresses them.
+        I love the intersection of data, design, and human-centered thinking — which is exactly why I'm applying to
+        <strong>Apple Developer Academy</strong>. Apple's ecosystem is the gold standard for that philosophy.
+      </p>
+      <p>
+        When I'm not coding, I'm exploring satellite imagery datasets, experimenting with new ML architectures,
+        or mentoring junior developers in my community.
+      </p>
+    </div>
+    <div class="about-right">
+      <blockquote class="about-quote">
+        "I turn raw data into decisions — and ideas into apps that actually get used."
+      </blockquote>
+      <div class="about-links">
+        <a href="https://linkedin.com/in/muhammad-ihsan-al-riawi" class="about-link" target="_blank">
+          <span class="about-link-name">LinkedIn</span>
+          <span>linkedin.com/in/muhammad-ihsan-al-riawi ↗</span>
+        </a>
+        <a href="https://github.com/poineko" class="about-link" target="_blank">
+          <span class="about-link-name">GitHub</span>
+          <span>github.com/poineko ↗</span>
+        </a>
+        <a href="https://kaggle.com/itpoii" class="about-link" target="_blank">
+          <span class="about-link-name">Kaggle</span>
+          <span>kaggle.com/itpoii ↗</span>
+        </a>
+        <a href="mailto:eliteisan@gmail.com" class="about-link">
+          <span class="about-link-name">Email</span>
+          <span>eliteisan@gmail.com ↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Work</div>
+  <div class="projects-header">
+    <h2>Featured projects</h2>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="ai">AI / ML</button>
+    <button class="filter-btn" data-cat="ds">Data Science</button>
+    <button class="filter-btn" data-cat="web">Web</button>
+    <button class="filter-btn" data-cat="mobile">Mobile</button>
+  </div>
+  <div class="projects-grid" id="projectsGrid">
+
+    <div class="project-card" data-cat="ds">
+      <div class="project-thumb thumb-ds">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="28" width="8" height="16" rx="2" fill="#F4A261" opacity=".7"/><rect x="15" y="20" width="8" height="24" rx="2" fill="#F4A261" opacity=".85"/><rect x="26" y="12" width="8" height="32" rx="2" fill="#F4A261"/><rect x="37" y="6" width="8" height="38" rx="2" fill="#F4A261" opacity=".6"/><path d="M6 26 L18 18 L30 10 L42 4" stroke="#F4A261" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ds">Data Science</span>
+        <div class="project-title">Land Surface Temperature Forecasting</div>
+        <div class="project-desc">Forecasting LST di wilayah Riau menggunakan citra satelit MODIS dengan metode ARIMA & SARIMA. Dilengkapi dashboard interaktif berbasis web untuk visualisasi prediksi.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Flask</span>
+          <span class="project-tag">Dash</span>
+          <span class="project-tag">SARIMA</span>
+          <span class="project-tag">MODIS</span>
+          <span class="project-tag">Plotly</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="ai">
+      <div class="project-thumb thumb-ai">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="#C77DFF" stroke-width="1.5"/><circle cx="24" cy="24" r="4" fill="#C77DFF" opacity=".6"/><circle cx="8" cy="24" r="3" fill="#C77DFF" opacity=".4"/><circle cx="40" cy="24" r="3" fill="#C77DFF" opacity=".4"/><circle cx="24" cy="8" r="3" fill="#C77DFF" opacity=".4"/><circle cx="24" cy="40" r="3" fill="#C77DFF" opacity=".4"/><line x1="11" y1="24" x2="14" y2="24" stroke="#C77DFF" stroke-width="1"/><line x1="34" y1="24" x2="37" y2="24" stroke="#C77DFF" stroke-width="1"/><line x1="24" y1="11" x2="24" y2="14" stroke="#C77DFF" stroke-width="1"/><line x1="24" y1="34" x2="24" y2="37" stroke="#C77DFF" stroke-width="1"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ai">AI / ML</span>
+        <div class="project-title">AI-Powered Analytics Dashboard</div>
+        <div class="project-desc">Platform analitik full-stack yang mengintegrasikan ML pipeline dengan React frontend. Mendukung EDA otomatis, training model, dan result export untuk non-technical users.</div>
+        <div class="project-tags">
+          <span class="project-tag">React.js</span>
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Scikit-learn</span>
+          <span class="project-tag">Node.js</span>
+          <span class="project-tag">MySQL</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="mobile">
+      <div class="project-thumb thumb-mobile">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="14" y="4" width="20" height="36" rx="4" stroke="#5B8DEF" stroke-width="1.5"/><rect x="18" y="8" width="12" height="18" rx="2" fill="#5B8DEF" opacity=".15"/><circle cx="24" cy="34" r="2" fill="#5B8DEF" opacity=".5"/><rect x="20" y="12" width="8" height="1.5" rx="1" fill="#5B8DEF" opacity=".5"/><rect x="18" y="16" width="12" height="1.5" rx="1" fill="#5B8DEF" opacity=".3"/><rect x="18" y="20" width="9" height="1.5" rx="1" fill="#5B8DEF" opacity=".3"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-mobile">Mobile</span>
+        <div class="project-title">Cross-Platform Mobile Apps</div>
+        <div class="project-desc">Pengembangan aplikasi mobile native & hybrid menggunakan Flutter dan React Native. Mencakup e-commerce app, task manager, dan image classifier dengan Firebase backend.</div>
+        <div class="project-tags">
+          <span class="project-tag">Flutter</span>
+          <span class="project-tag">React Native</span>
+          <span class="project-tag">Dart</span>
+          <span class="project-tag">Firebase</span>
+          <span class="project-tag">REST API</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb thumb-web">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="30" rx="4" stroke="#7EC8A4" stroke-width="1.5"/><rect x="8" y="12" width="16" height="10" rx="2" fill="#7EC8A4" opacity=".15"/><rect x="8" y="25" width="32" height="2" rx="1" fill="#7EC8A4" opacity=".3"/><rect x="8" y="29" width="20" height="2" rx="1" fill="#7EC8A4" opacity=".2"/><rect x="27" y="12" width="13" height="10" rx="2" fill="#7EC8A4" opacity=".25"/><circle cx="24" cy="42" r="3" fill="#7EC8A4" opacity=".3"/><line x1="24" y1="38" x2="24" y2="40" stroke="#7EC8A4" stroke-width="1"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-web">Web Dev</span>
+        <div class="project-title">Full-Stack Web Applications</div>
+        <div class="project-desc">Berbagai web app menggunakan MERN stack, Laravel, dan Vue.js — termasuk sistem informasi, portal akademik, dan REST API dengan JWT authentication.</div>
+        <div class="project-tags">
+          <span class="project-tag">React.js</span>
+          <span class="project-tag">Laravel</span>
+          <span class="project-tag">Vue.js</span>
+          <span class="project-tag">MongoDB</span>
+          <span class="project-tag">Express</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="ai">
+      <div class="project-thumb thumb-ai">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="14" height="14" rx="3" fill="#C77DFF" opacity=".2"/><rect x="26" y="8" width="14" height="14" rx="3" fill="#C77DFF" opacity=".4"/><rect x="8" y="26" width="14" height="14" rx="3" fill="#C77DFF" opacity=".4"/><rect x="26" y="26" width="14" height="14" rx="3" fill="#C77DFF" opacity=".7"/><line x1="22" y1="15" x2="26" y2="15" stroke="#C77DFF" stroke-width="1"/><line x1="15" y1="22" x2="15" y2="26" stroke="#C77DFF" stroke-width="1"/><line x1="22" y1="33" x2="26" y2="33" stroke="#C77DFF" stroke-width="1"/><line x1="33" y1="22" x2="33" y2="26" stroke="#C77DFF" stroke-width="1"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ai">AI / ML</span>
+        <div class="project-title">Computer Vision Projects</div>
+        <div class="project-desc">Implementasi CNN untuk image classification, object detection, dan digital image forensics — termasuk deteksi manipulasi gambar dan metadata extraction.</div>
+        <div class="project-tags">
+          <span class="project-tag">TensorFlow</span>
+          <span class="project-tag">CNN</span>
+          <span class="project-tag">OpenCV</span>
+          <span class="project-tag">Python</span>
+          <span class="project-tag">MATLAB</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="ds">
+      <div class="project-thumb thumb-ds">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="16" stroke="#F4A261" stroke-width="1.5" opacity=".4"/><path d="M24 8 A16 16 0 0 1 40 24" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/><path d="M24 8 L24 24 L36 32" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="24" r="3" fill="#F4A261"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ds">Data Science</span>
+        <div class="project-title">EDA & Statistical Analysis Tools</div>
+        <div class="project-desc">Kumpulan notebook dan tools untuk Exploratory Data Analysis, visualisasi distribusi, uji hipotesis, dan feature engineering — digunakan untuk teaching dan research.</div>
+        <div class="project-tags">
+          <span class="project-tag">Pandas</span>
+          <span class="project-tag">NumPy</span>
+          <span class="project-tag">Matplotlib</span>
+          <span class="project-tag">Seaborn</span>
+          <span class="project-tag">R</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://kaggle.com/itpoii" class="proj-link" target="_blank">Kaggle ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="mobile">
+      <div class="project-thumb thumb-mobile">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="10" width="16" height="28" rx="3" stroke="#5B8DEF" stroke-width="1.5"/><rect x="26" y="10" width="16" height="28" rx="3" stroke="#5B8DEF" stroke-width="1.5" opacity=".5"/><rect x="10" y="15" width="8" height="8" rx="1.5" fill="#5B8DEF" opacity=".2"/><rect x="30" y="15" width="8" height="8" rx="1.5" fill="#5B8DEF" opacity=".1"/><rect x="10" y="27" width="8" height="2" rx="1" fill="#5B8DEF" opacity=".3"/><rect x="30" y="27" width="8" height="2" rx="1" fill="#5B8DEF" opacity=".2"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-mobile">Mobile</span>
+        <div class="project-title">IoT Sensor Data App</div>
+        <div class="project-desc">Aplikasi mobile untuk monitoring data sensor IoT secara real-time. Menghubungkan hardware sensor dengan mobile frontend melalui REST API dan Firebase realtime database.</div>
+        <div class="project-tags">
+          <span class="project-tag">Flutter</span>
+          <span class="project-tag">Firebase</span>
+          <span class="project-tag">IoT</span>
+          <span class="project-tag">C++</span>
+          <span class="project-tag">Arduino</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb thumb-web">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="6" width="36" height="36" rx="5" stroke="#7EC8A4" stroke-width="1.5" opacity=".3"/><rect x="6" y="6" width="36" height="12" rx="5" fill="#7EC8A4" opacity=".1"/><circle cx="12" cy="12" r="2" fill="#7EC8A4" opacity=".5"/><circle cx="19" cy="12" r="2" fill="#7EC8A4" opacity=".3"/><rect x="10" y="24" width="28" height="2" rx="1" fill="#7EC8A4" opacity=".3"/><rect x="10" y="29" width="20" height="2" rx="1" fill="#7EC8A4" opacity=".2"/><rect x="10" y="34" width="14" height="2" rx="1" fill="#7EC8A4" opacity=".15"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-web">Web Dev</span>
+        <div class="project-title">Academic Learning Management System</div>
+        <div class="project-desc">Sistem manajemen pembelajaran berbasis web untuk mendukung kegiatan praktikum — upload materi, submission tugas, penilaian, dan laporan bulanan dosen.</div>
+        <div class="project-tags">
+          <span class="project-tag">Laravel</span>
+          <span class="project-tag">PHP</span>
+          <span class="project-tag">MySQL</span>
+          <span class="project-tag">Bootstrap</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="ai">
+      <div class="project-thumb thumb-ai">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><polyline points="4,36 12,20 20,28 28,12 36,18 44,6" stroke="#C77DFF" stroke-width="1.5" fill="none" stroke-linejoin="round"/><circle cx="12" cy="20" r="2.5" fill="#C77DFF" opacity=".6"/><circle cx="20" cy="28" r="2.5" fill="#C77DFF" opacity=".6"/><circle cx="28" cy="12" r="2.5" fill="#C77DFF" opacity=".6"/><circle cx="36" cy="18" r="2.5" fill="#C77DFF" opacity=".6"/><polyline points="4,36 44,36" stroke="#C77DFF" stroke-width=".5" opacity=".2"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ai">AI / ML</span>
+        <div class="project-title">Time Series Forecasting Models</div>
+        <div class="project-desc">Koleksi model time series — ARIMA, SARIMA, LSTM — untuk berbagai domain: cuaca, konsumsi energi, dan tren akademik. Termasuk evaluasi MAE, RMSE, MSE.</div>
+        <div class="project-tags">
+          <span class="project-tag">LSTM</span>
+          <span class="project-tag">ARIMA</span>
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Statsmodels</span>
+        </div>
+        <div class="project-footer">
+          <a href="https://github.com/poineko" class="proj-link" target="_blank">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="ds">
+      <div class="project-thumb thumb-ds">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="4" width="18" height="18" rx="3" fill="#F4A261" opacity=".15" stroke="#F4A261" stroke-width="1"/><rect x="26" y="4" width="18" height="18" rx="3" fill="#F4A261" opacity=".3" stroke="#F4A261" stroke-width="1"/><rect x="4" y="26" width="18" height="18" rx="3" fill="#F4A261" opacity=".3" stroke="#F4A261" stroke-width="1"/><rect x="26" y="26" width="18" height="18" rx="3" fill="#F4A261" opacity=".6" stroke="#F4A261" stroke-width="1"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-ds">Data Science</span>
+        <div class="project-title">MBKM Policy Evaluation Research</div>
+        <div class="project-desc">Penelitian evaluasi kebijakan program MBKM menggunakan teknik survei dan kuesioner. Pengumpulan, manajemen, dan analisis data untuk mengukur capaian belajar mahasiswa.</div>
+        <div class="project-tags">
+          <span class="project-tag">R</span>
+          <span class="project-tag">SPSS</span>
+          <span class="project-tag">Survey Analysis</span>
+          <span class="project-tag">Excel</span>
+        </div>
+        <div class="project-footer">
+          <span style="font-size:12px; color: var(--hint); padding: 4px 0;">Research paper</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web mobile">
+      <div class="project-thumb thumb-web">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="8" stroke="#7EC8A4" stroke-width="1.5"/><path d="M8 40 C8 30 40 30 40 40" stroke="#7EC8A4" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="18" r="3" fill="#7EC8A4" opacity=".4"/></svg>
+      </div>
+      <div class="project-body">
+        <span class="project-cat-badge badge-web">Web Dev</span>
+        <div class="project-title">SIMKAH — Government Info System</div>
+        <div class="project-desc">Pengembangan dan pemeliharaan Sistem Informasi Manajemen Nikah untuk KUA Bukit Raya Pekanbaru — termasuk pendataan, pembaruan sistem, dan troubleshooting jaringan.</div>
+        <div class="project-tags">
+          <span class="project-tag">PHP</span>
+          <span class="project-tag">MySQL</span>
+          <span class="project-tag">Networking</span>
+          <span class="project-tag">IT Support</span>
+        </div>
+        <div class="project-footer">
+          <span style="font-size:12px; color: var(--hint); padding: 4px 0;">Government project</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Stack</div>
+  <h2>Technical skills</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-label" style="color: var(--cat-ai);">AI / Machine Learning</div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ai);"></div><span class="skill-name">Python (Scikit-learn, TF)</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:92%; background: var(--cat-ai);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ai);"></div><span class="skill-name">Deep Learning (CNN, LSTM)</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:80%; background: var(--cat-ai);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ai);"></div><span class="skill-name">Time Series Forecasting</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:85%; background: var(--cat-ai);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ai);"></div><span class="skill-name">Computer Vision</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:75%; background: var(--cat-ai);"></div></div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label" style="color: var(--cat-ds);">Data Science</div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ds);"></div><span class="skill-name">Pandas / NumPy</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:95%; background: var(--cat-ds);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ds);"></div><span class="skill-name">Data Visualization</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:88%; background: var(--cat-ds);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ds);"></div><span class="skill-name">Statistical Analysis</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:82%; background: var(--cat-ds);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-ds);"></div><span class="skill-name">R Programming</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:70%; background: var(--cat-ds);"></div></div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label" style="color: var(--cat-web);">Web Development</div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-web);"></div><span class="skill-name">React.js / Vue.js</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:88%; background: var(--cat-web);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-web);"></div><span class="skill-name">Node.js / Express</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:83%; background: var(--cat-web);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-web);"></div><span class="skill-name">Laravel / PHP</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:80%; background: var(--cat-web);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-web);"></div><span class="skill-name">Flask / FastAPI</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:78%; background: var(--cat-web);"></div></div></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label" style="color: var(--cat-mobile);">Mobile & DevOps</div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-mobile);"></div><span class="skill-name">Flutter / Dart</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:80%; background: var(--cat-mobile);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-mobile);"></div><span class="skill-name">React Native</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:75%; background: var(--cat-mobile);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-mobile);"></div><span class="skill-name">Firebase</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:82%; background: var(--cat-mobile);"></div></div></div>
+      <div class="skill-item"><div class="skill-dot" style="background: var(--cat-mobile);"></div><span class="skill-name">Docker / AWS / GCP</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:65%; background: var(--cat-mobile);"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Experience</div>
+  <h2>Where I've worked</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-period">Jun 2022 — Aug 2025 · 3+ Years</div>
+      <div class="timeline-role">Teaching Assistant / Assistant Lecturer</div>
+      <div class="timeline-org">Universitas Islam Riau</div>
+      <ul class="timeline-bullets">
+        <li>Mengajar & mendampingi 7+ mata kuliah: Machine Learning, Computer Vision, Data Science, AI, Web Dev, Mobile Apps, Databases</li>
+        <li>Membimbing 100+ mahasiswa per semester di Program Studi Teknik Informatika dan Teknik Perminyakan</li>
+        <li>Menyusun modul praktikum, materi presentasi, dan sistem penilaian menggunakan Python, MATLAB, dan berbagai framework web/mobile</li>
+        <li>Berkoordinasi dengan dosen pengampu dan Kepala Laboratorium untuk evaluasi capaian pembelajaran</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: var(--accent2);"></div>
+      <div class="timeline-period">Mar 2022 — Apr 2022</div>
+      <div class="timeline-role">IT Support Intern</div>
+      <div class="timeline-org">KUA Bukit Raya, Pekanbaru</div>
+      <ul class="timeline-bullets">
+        <li>Pengelolaan SIMKAH (Sistem Informasi Manajemen Nikah) — pendataan dan pembaruan sistem</li>
+        <li>Hardware maintenance, instalasi, dan troubleshooting komputer dan jaringan lokal</li>
+        <li>Pengembangan minor pada sistem informasi operasional pelayanan KUA</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background: var(--accent3);"></div>
+      <div class="timeline-period">Sep 2019 — Jul 2025</div>
+      <div class="timeline-role">Bachelor of Informatics Engineering</div>
+      <div class="timeline-org">Universitas Islam Riau · GPA 3.41 / 4.00</div>
+      <ul class="timeline-bullets">
+        <li>Focus: Artificial Intelligence, Data Science, Mobile & Web Development</li>
+        <li>Thesis: Land Surface Temperature forecasting using MODIS satellite data dengan SARIMA</li>
+        <li>Aktif sebagai anggota Ikatan Alumni Teknik Informatika UIR (Nov 2023 — sekarang)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certifications">
+  <div class="section-label">Credentials</div>
+  <h2>Certifications</h2>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-issuer">Google × Coursera × KOMINFO</div>
+      <div class="cert-name">Google Data Analytics Certificate</div>
+      <div class="cert-year">2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Amazon Web Services × KOMINFO</div>
+      <div class="cert-name">AWS Academy Machine Learning Foundations</div>
+      <div class="cert-year">2023</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Microsoft × Styava</div>
+      <div class="cert-name">Microsoft Azure Fundamentals (AZ-900)</div>
+      <div class="cert-year">2022</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Google × Coursera × KOMINFO</div>
+      <div class="cert-name">Data Analysis with R Programming</div>
+      <div class="cert-year">2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Google × Coursera × KOMINFO</div>
+      <div class="cert-name">Processing Data from Dirty to Clean</div>
+      <div class="cert-year">2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Google × Coursera × KOMINFO</div>
+      <div class="cert-name">Sharing Data Through the Art of Visualization</div>
+      <div class="cert-year">2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Google × Coursera × KOMINFO</div>
+      <div class="cert-name">Ask Questions to Make Data-Driven Decisions</div>
+      <div class="cert-year">2024</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">GreatEdu</div>
+      <div class="cert-name">UI/UX in Digital Product Development</div>
+      <div class="cert-year">2022</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">BULLYID</div>
+      <div class="cert-name">How to Collect Evidence and Report Online GBV</div>
+      <div class="cert-year">2022</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Let's talk</div>
+  <h2>Get in touch</h2>
+  <div class="contact-wrap">
+    <div>
+      <p class="contact-intro">
+        Tertarik berkolaborasi, punya project seru, atau sekadar ingin ngobrol soal AI dan mobile development?
+        Aku selalu terbuka untuk opportunity baru — terutama yang berkaitan dengan Apple Developer Academy.
+      </p>
+      <div class="contact-info-list">
+        <div class="contact-info-item">
+          <div class="contact-info-icon">@</div>
+          <span>eliteisan@gmail.com</span>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">in</div>
+          <a href="https://linkedin.com/in/muhammad-ihsan-al-riawi" target="_blank" style="color: var(--accent);">linkedin.com/in/muhammad-ihsan-al-riawi</a>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">&lt;/&gt;</div>
+          <a href="https://github.com/poineko" target="_blank" style="color: var(--accent);">github.com/poineko</a>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon">WA</div>
+          <span>+62 821-7379-4685</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <input type="text" placeholder="Your name"/>
+      <input type="email" placeholder="Your email"/>
+      <textarea placeholder="Your message..."></textarea>
+      <button class="send-btn" onclick="alert('Thanks! You can reach me directly at eliteisan@gmail.com')">Send message</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Muhammad Ihsan Al Riawi — Portfolio 2025</span>
+  <span>Built with HTML · Hosted on GitHub Pages</span>
+  <span>Pekanbaru, Indonesia</span>
+</footer>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.project-card');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      cards.forEach(card => {
+        if (cat === 'all' || card.dataset.cat.includes(cat)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
