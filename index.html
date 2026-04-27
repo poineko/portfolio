@@ -117,7 +117,6 @@ h2 em { font-style: italic; color: var(--muted); }
   position: relative; overflow: hidden;
 }
 
-/* Glow blobs */
 .hero-blob1 {
   position: absolute; width: 600px; height: 600px;
   border-radius: 50%;
@@ -148,7 +147,6 @@ h2 em { font-style: italic; color: var(--muted); }
   align-items: center;
 }
 
-/* status badge */
 .status-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 6px 14px;
@@ -211,7 +209,6 @@ h2 em { font-style: italic; color: var(--muted); }
 }
 .btn-ghost:hover { border-color: var(--text); background: var(--bg3); }
 
-/* photo */
 .hero-photo-wrap { display: flex; justify-content: center; }
 .hero-photo {
   width: 220px; height: 280px;
@@ -246,7 +243,6 @@ h2 em { font-style: italic; color: var(--muted); }
   z-index: 2;
 }
 
-/* hero stats */
 .hero-stats {
   max-width: 1160px; margin: 60px auto 0;
   padding: 0 48px;
@@ -295,7 +291,6 @@ h2 em { font-style: italic; color: var(--muted); }
 .about-text p strong { color: var(--text); font-weight: 600; }
 .about-text p:last-child { margin-bottom: 0; }
 
-.about-right {}
 .about-quote {
   font-family: 'Fraunces', serif;
   font-size: 18px; font-style: italic;
@@ -337,6 +332,7 @@ h2 em { font-style: italic; color: var(--muted); }
 .filter-btn[data-cat="web"].active    { border-color: var(--green);  color: var(--green);  background: rgba(111,223,178,.08); }
 .filter-btn[data-cat="ai"].active     { border-color: var(--purple); color: var(--purple); background: rgba(184,155,245,.08); }
 .filter-btn[data-cat="ds"].active     { border-color: var(--amber);  color: var(--amber);  background: rgba(245,190,113,.08); }
+.filter-btn[data-cat="da"].active     { border-color: var(--amber);  color: var(--amber);  background: rgba(245,190,113,.08); }
 
 .projects-grid {
   display: grid;
@@ -351,6 +347,22 @@ h2 em { font-style: italic; color: var(--muted); }
 }
 .project-card:hover { border-color: var(--border2); transform: translateY(-3px); }
 
+/* Featured card styling for top projects */
+.project-card.featured {
+  border-color: rgba(255,255,255,0.1);
+  position: relative;
+}
+.project-card.featured::before {
+  content: 'Featured';
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 100px;
+  background: rgba(126,179,255,0.12);
+  color: var(--accent);
+  border: 0.5px solid rgba(126,179,255,0.3);
+}
+
 .project-thumb {
   height: 130px;
   display: flex; align-items: center; justify-content: center;
@@ -360,6 +372,7 @@ h2 em { font-style: italic; color: var(--muted); }
 .thumb-web    { background: rgba(111,223,178,.06); }
 .thumb-ai     { background: rgba(184,155,245,.06); }
 .thumb-ds     { background: rgba(245,190,113,.06); }
+.thumb-da     { background: rgba(245,190,113,.06); }
 
 .project-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
 .project-cat-badge {
@@ -372,6 +385,7 @@ h2 em { font-style: italic; color: var(--muted); }
 .badge-web    { background: rgba(111,223,178,.12); color: var(--green); }
 .badge-ai     { background: rgba(184,155,245,.12); color: var(--purple); }
 .badge-ds     { background: rgba(245,190,113,.12); color: var(--amber); }
+.badge-da     { background: rgba(245,190,113,.12); color: var(--amber); }
 
 .project-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.35; }
 .project-desc  { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; flex: 1; }
@@ -620,7 +634,7 @@ footer {
       <div class="stat-label">Years teaching &amp; mentoring</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-num"><span class="accent">11</span></div>
+      <div class="stat-num"><span class="accent">14</span></div>
       <div class="stat-label">Projects shipped</div>
     </div>
     <div class="stat-cell">
@@ -679,7 +693,7 @@ footer {
   <div class="filter-bar">
     <button class="filter-btn active" data-cat="all">All</button>
     <button class="filter-btn" data-cat="ai">AI / ML</button>
-    <button class="filter-btn" data-cat="ds">Data Science</button>
+    <button class="filter-btn" data-cat="ds">Data Science / Analysis</button>
     <button class="filter-btn" data-cat="web">Web</button>
     <button class="filter-btn" data-cat="mobile">Mobile</button>
   </div>
@@ -701,7 +715,7 @@ footer {
       <div class="skill-item"><div class="skill-dot" style="background:var(--purple)"></div><span class="skill-name">Computer Vision</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:75%;background:var(--purple)"></div></div></div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-label" style="color:var(--amber)">Data Science</div>
+      <div class="skill-group-label" style="color:var(--amber)">Data Science / Analysis</div>
       <div class="skill-item"><div class="skill-dot" style="background:var(--amber)"></div><span class="skill-name">Pandas / NumPy</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:95%;background:var(--amber)"></div></div></div>
       <div class="skill-item"><div class="skill-dot" style="background:var(--amber)"></div><span class="skill-name">Data Visualization</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:88%;background:var(--amber)"></div></div></div>
       <div class="skill-item"><div class="skill-dot" style="background:var(--amber)"></div><span class="skill-name">Statistical Analysis</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:82%;background:var(--amber)"></div></div></div>
@@ -820,45 +834,180 @@ footer {
 
 <script>
 const PROJECTS = [
-  { title:'Land Surface Temperature Forecasting', category:'ds', desc:'Forecasting LST di wilayah Riau menggunakan citra satelit MODIS dengan metode ARIMA & SARIMA. Dilengkapi dashboard interaktif Dash/Plotly.', tags:['Python','Flask','Dash','SARIMA','MODIS','Plotly'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'AI-Powered Analytics Dashboard', category:'ai', desc:'Platform analitik full-stack dengan ML pipeline, EDA otomatis, training model, dan result export untuk non-technical users.', tags:['React.js','Python','Scikit-learn','Node.js','MySQL'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'Cross-Platform Mobile Apps', category:'mobile', desc:'Aplikasi mobile native & hybrid menggunakan Flutter dan React Native — e-commerce, task manager, dan image classifier dengan Firebase.', tags:['Flutter','React Native','Dart','Firebase','REST API'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'Full-Stack Web Applications', category:'web', desc:'Berbagai web app menggunakan MERN stack, Laravel, dan Vue.js — sistem informasi, portal akademik, REST API dengan JWT.', tags:['React.js','Laravel','Vue.js','MongoDB','Express'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'Computer Vision Projects', category:'ai', desc:'Implementasi CNN untuk image classification, object detection, dan digital image forensics — deteksi manipulasi gambar.', tags:['TensorFlow','CNN','OpenCV','Python','MATLAB'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'EDA & Statistical Analysis Tools', category:'ds', desc:'Notebook dan tools untuk Exploratory Data Analysis, visualisasi distribusi, uji hipotesis, dan feature engineering untuk teaching.', tags:['Pandas','NumPy','Matplotlib','Seaborn','R'], github:'https://kaggle.com/itpoii', demo:'', image:'' },
-  { title:'IoT Sensor Data App', category:'mobile', desc:'Aplikasi mobile monitoring data sensor IoT real-time — menghubungkan hardware sensor dengan mobile frontend via Firebase.', tags:['Flutter','Firebase','IoT','C++','Arduino'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'Academic LMS', category:'web', desc:'Sistem manajemen pembelajaran berbasis web untuk praktikum — upload materi, submission tugas, penilaian, dan laporan dosen.', tags:['Laravel','PHP','MySQL','Bootstrap'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'Time Series Forecasting Models', category:'ai', desc:'Koleksi model time series — ARIMA, SARIMA, LSTM — untuk berbagai domain: cuaca, energi, dan tren akademik.', tags:['LSTM','ARIMA','Python','Statsmodels'], github:'https://github.com/poineko', demo:'', image:'' },
-  { title:'MBKM Policy Evaluation Research', category:'ds', desc:'Penelitian evaluasi kebijakan MBKM menggunakan survei dan kuesioner. Pengumpulan dan analisis data untuk mengukur capaian belajar.', tags:['R','Survey Analysis','Excel','SPSS'], github:'', demo:'', image:'' },
-  { title:'SIMKAH — Government Info System', category:'web', desc:'Pengembangan SIMKAH untuk KUA Bukit Raya Pekanbaru — pendataan, pembaruan sistem, dan troubleshooting jaringan.', tags:['PHP','MySQL','Networking'], github:'', demo:'', image:'' }
+  {
+    title: 'Fintrack — Personal & Shared Finance Manager',
+    category: 'mobile',
+    featured: true,
+    desc: 'Aplikasi Flutter untuk manajemen keuangan pribadi & bersama secara real-time. Multi-dompet, kasbon atomik, piutang & hutang ke teman — semua dalam satu app. Clean Architecture: Repository → Provider → Feature. Solved: Drift+Riverpod dependency conflict, real-time saldo stream tanpa polling, reverse-saldo saat edit/hapus transaksi.',
+    tags: ['Flutter 3.41', 'Dart 3.11', 'Drift (SQLite)', 'Riverpod 2.x', 'GoRouter', 'FL Chart'],
+    github: 'https://github.com/poineko/fintrack-App',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'ML-Driven E-Commerce: Segments & Sales Predict',
+    category: 'ds',
+    featured: true,
+    desc: 'Analisis perilaku pelanggan & prediksi penjualan dari dataset transaksi e-commerce. RFM feature engineering, segmentasi K-Means (identifikasi top 10% pelanggan), deteksi churn, dan forecasting penjualan 30 hari ke depan dengan Facebook Prophet & SARIMA. Output: Strategic Roadmap untuk tim CRM, Marketing, dan Product.',
+    tags: ['Python', 'K-Means', 'RFM', 'Prophet', 'SARIMA', 'Scikit-learn', 'Pandas'],
+    github: '',
+    demo: 'https://www.kaggle.com/code/itpoii/ml-driven-e-commerce-segments-sales-predict',
+    image: ''
+  },
+  {
+    title: 'Superstore Sales & Profit Analysis',
+    category: 'da',
+    featured: true,
+    desc: 'Analisis performa bisnis dataset Superstore — faktor profitabilitas, dampak diskon, kinerja regional, dan segmentasi pelanggan. EDA mendalam dengan visualisasi interaktif Plotly. Insight bisnis siap pakai untuk pengambilan keputusan strategis.',
+    tags: ['Python', 'Pandas', 'NumPy', 'Plotly', 'EDA', 'Matplotlib', 'Seaborn'],
+    github: '',
+    demo: 'https://www.kaggle.com/code/itpoii/superstore-sales-profit-analysis',
+    image: ''
+  },
+  {
+    title: 'Land Surface Temperature Forecasting',
+    category: 'ds',
+    featured: false,
+    desc: 'Forecasting LST di wilayah Riau menggunakan citra satelit MODIS dengan metode ARIMA & SARIMA. Dilengkapi dashboard interaktif Dash/Plotly.',
+    tags: ['Python', 'Flask', 'Dash', 'SARIMA', 'MODIS', 'Plotly'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'AI-Powered Analytics Dashboard',
+    category: 'ai',
+    featured: false,
+    desc: 'Platform analitik full-stack dengan ML pipeline, EDA otomatis, training model, dan result export untuk non-technical users.',
+    tags: ['React.js', 'Python', 'Scikit-learn', 'Node.js', 'MySQL'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'Cross-Platform Mobile Apps',
+    category: 'mobile',
+    featured: false,
+    desc: 'Aplikasi mobile native & hybrid menggunakan Flutter dan React Native — e-commerce, task manager, dan image classifier dengan Firebase.',
+    tags: ['Flutter', 'React Native', 'Dart', 'Firebase', 'REST API'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'Full-Stack Web Applications',
+    category: 'web',
+    featured: false,
+    desc: 'Berbagai web app menggunakan MERN stack, Laravel, dan Vue.js — sistem informasi, portal akademik, REST API dengan JWT.',
+    tags: ['React.js', 'Laravel', 'Vue.js', 'MongoDB', 'Express'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'Computer Vision Projects',
+    category: 'ai',
+    featured: false,
+    desc: 'Implementasi CNN untuk image classification, object detection, dan digital image forensics — deteksi manipulasi gambar.',
+    tags: ['TensorFlow', 'CNN', 'OpenCV', 'Python', 'MATLAB'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'EDA & Statistical Analysis Tools',
+    category: 'da',
+    featured: false,
+    desc: 'Notebook dan tools untuk Exploratory Data Analysis, visualisasi distribusi, uji hipotesis, dan feature engineering untuk teaching.',
+    tags: ['Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'R'],
+    github: 'https://kaggle.com/itpoii',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'IoT Sensor Data App',
+    category: 'mobile',
+    featured: false,
+    desc: 'Aplikasi mobile monitoring data sensor IoT real-time — menghubungkan hardware sensor dengan mobile frontend via Firebase.',
+    tags: ['Flutter', 'Firebase', 'IoT', 'C++', 'Arduino'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'Academic LMS',
+    category: 'web',
+    featured: false,
+    desc: 'Sistem manajemen pembelajaran berbasis web untuk praktikum — upload materi, submission tugas, penilaian, dan laporan dosen.',
+    tags: ['Laravel', 'PHP', 'MySQL', 'Bootstrap'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'Time Series Forecasting Models',
+    category: 'ai',
+    featured: false,
+    desc: 'Koleksi model time series — ARIMA, SARIMA, LSTM — untuk berbagai domain: cuaca, energi, dan tren akademik.',
+    tags: ['LSTM', 'ARIMA', 'Python', 'Statsmodels'],
+    github: 'https://github.com/poineko',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'MBKM Policy Evaluation Research',
+    category: 'da',
+    featured: false,
+    desc: 'Penelitian evaluasi kebijakan MBKM menggunakan survei dan kuesioner. Pengumpulan dan analisis data untuk mengukur capaian belajar.',
+    tags: ['R', 'Survey Analysis', 'Excel', 'SPSS'],
+    github: '',
+    demo: '',
+    image: ''
+  },
+  {
+    title: 'SIMKAH — Government Info System',
+    category: 'web',
+    featured: false,
+    desc: 'Pengembangan SIMKAH untuk KUA Bukit Raya Pekanbaru — pendataan, pembaruan sistem, dan troubleshooting jaringan.',
+    tags: ['PHP', 'MySQL', 'Networking'],
+    github: '',
+    demo: '',
+    image: ''
+  }
 ];
 
-const CAT_LABELS = { mobile:'Mobile', web:'Web Dev', ai:'AI / ML', ds:'Data Science' };
+const CAT_LABELS = { mobile:'Mobile', web:'Web Dev', ai:'AI / ML', ds:'Data Science', da:'Data Analysis' };
 const THUMB_SVG = {
   mobile:`<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="14" y="4" width="20" height="36" rx="4" stroke="#7EB3FF" stroke-width="1.5"/><rect x="18" y="8" width="12" height="18" rx="2" fill="#7EB3FF" opacity=".12"/><circle cx="24" cy="34" r="2" fill="#7EB3FF" opacity=".4"/></svg>`,
   web:   `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="30" rx="4" stroke="#6FDFB2" stroke-width="1.5"/><rect x="8" y="12" width="16" height="10" rx="2" fill="#6FDFB2" opacity=".12"/><rect x="8" y="25" width="32" height="2" rx="1" fill="#6FDFB2" opacity=".25"/></svg>`,
   ai:    `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="#B89BF5" stroke-width="1.5"/><circle cx="24" cy="24" r="4" fill="#B89BF5" opacity=".35"/><circle cx="8" cy="24" r="3" fill="#B89BF5" opacity=".25"/><circle cx="40" cy="24" r="3" fill="#B89BF5" opacity=".25"/><circle cx="24" cy="8" r="3" fill="#B89BF5" opacity=".25"/><circle cx="24" cy="40" r="3" fill="#B89BF5" opacity=".25"/></svg>`,
-  ds:    `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="4" y="28" width="8" height="16" rx="2" fill="#F5BE71" opacity=".5"/><rect x="15" y="20" width="8" height="24" rx="2" fill="#F5BE71" opacity=".7"/><rect x="26" y="12" width="8" height="32" rx="2" fill="#F5BE71" opacity=".9"/><rect x="37" y="6" width="8" height="38" rx="2" fill="#F5BE71" opacity=".4"/></svg>`
+  ds:    `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="4" y="28" width="8" height="16" rx="2" fill="#F5BE71" opacity=".5"/><rect x="15" y="20" width="8" height="24" rx="2" fill="#F5BE71" opacity=".7"/><rect x="26" y="12" width="8" height="32" rx="2" fill="#F5BE71" opacity=".9"/><rect x="37" y="6" width="8" height="38" rx="2" fill="#F5BE71" opacity=".4"/></svg>`,
+  da:    `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="4" y="28" width="8" height="16" rx="2" fill="#F5BE71" opacity=".5"/><rect x="15" y="20" width="8" height="24" rx="2" fill="#F5BE71" opacity=".7"/><rect x="26" y="12" width="8" height="32" rx="2" fill="#F5BE71" opacity=".9"/><rect x="37" y="6" width="8" height="38" rx="2" fill="#F5BE71" opacity=".4"/></svg>`
 };
 
-function renderProjects(filter='all') {
-  const shown = filter==='all' ? PROJECTS : PROJECTS.filter(p=>p.category===filter);
+function renderProjects(filter = 'all') {
+  const shown = filter === 'all'
+    ? PROJECTS
+    : filter === 'ds'
+      ? PROJECTS.filter(p => p.category === 'ds' || p.category === 'da')
+      : PROJECTS.filter(p => p.category === filter);
   document.getElementById('projectsGrid').innerHTML = shown.map(p => {
     const lbl = CAT_LABELS[p.category] || p.category;
     const thumb = p.image
       ? `<img src="${p.image}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover">`
-      : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${THUMB_SVG[p.category]||''}</div>`;
+      : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${THUMB_SVG[p.category] || ''}</div>`;
     const links = [
       p.github ? `<a href="${p.github}" class="proj-link" target="_blank">GitHub ↗</a>` : '',
-      p.demo   ? `<a href="${p.demo}"   class="proj-link" target="_blank">Demo ↗</a>`   : ''
+      p.demo   ? `<a href="${p.demo}"   class="proj-link" target="_blank">Kaggle ↗</a>` : ''
     ].filter(Boolean).join('') || `<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--dim)">No link</span>`;
-    return `<div class="project-card">
+    const featuredClass = p.featured ? ' featured' : '';
+    return `<div class="project-card${featuredClass}">
       <div class="project-thumb thumb-${p.category}">${thumb}</div>
       <div class="project-body">
         <span class="project-cat-badge badge-${p.category}">${lbl}</span>
         <div class="project-title">${p.title}</div>
         <div class="project-desc">${p.desc}</div>
-        <div class="project-tags">${p.tags.map(t=>`<span class="project-tag">${t}</span>`).join('')}</div>
+        <div class="project-tags">${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}</div>
         <div class="project-footer">${links}</div>
       </div>
     </div>`;
@@ -867,7 +1016,7 @@ function renderProjects(filter='all') {
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderProjects(btn.dataset.cat);
   });
@@ -878,7 +1027,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   const btn = this.querySelector('button');
   btn.textContent = 'Sending...'; btn.disabled = true;
   try {
-    const res = await fetch(this.action, { method:'POST', body:new FormData(this), headers:{'Accept':'application/json'} });
+    const res = await fetch(this.action, { method: 'POST', body: new FormData(this), headers: { 'Accept': 'application/json' } });
     if (res.ok) {
       this.reset();
       document.getElementById('formSuccess').style.display = 'block';
