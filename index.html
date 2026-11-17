@@ -994,6 +994,7 @@
     </style>
     <link rel="stylesheet" href="css/dynamic.css" />
     <link rel="stylesheet" href="css/polish.css" />
+    <link rel="stylesheet" href="css/agency.css" />
     <script>
       document.documentElement.classList.add("js");
     </script>
@@ -1004,6 +1005,7 @@
       <span class="nav-logo">Ihsan<em>.</em></span>
       <div class="nav-links">
         <a href="#about">About</a>
+        <a href="#layanan">Layanan</a>
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#experience">Experience</a>
@@ -1040,6 +1042,7 @@
           <div class="hero-actions">
             <a href="#projects" class="btn-primary">View my work ↓</a>
             <a href="#contact" class="btn-ghost">Get in touch</a>
+            <a href="#layanan" class="btn-ghost">Layanan ARTech</a>
           </div>
         </div>
 
@@ -1133,6 +1136,37 @@
 
     <div class="sec-divider"></div>
 
+    <!-- LAYANAN ARTECH (dinamis dari API) -->
+    <section id="layanan">
+      <div class="label reveal">Layanan</div>
+      <h2 class="reveal">ARTech <em>by Poi</em></h2>
+      <p class="sec-sub reveal">
+        Jasa pembuatan website, aplikasi, dan analisis data untuk UMKM, bisnis,
+        dan institusi. Harga di bawah adalah harga mulai dari; harga final
+        ditentukan setelah konsultasi gratis.
+      </p>
+      <div id="serviceList" class="svc-wrap"></div>
+      <div class="svc-steps reveal">
+        <div><b>1</b><span>Konsultasi gratis lewat WhatsApp</span></div>
+        <div><b>2</b><span>Mockup / demo tampilan</span></div>
+        <div><b>3</b><span>DP, lalu pengerjaan</span></div>
+        <div><b>4</b><span>Revisi, peluncuran, perawatan</span></div>
+      </div>
+      <div class="svc-cta reveal">
+        <a
+          class="btn-primary"
+          id="waMain"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Konsultasi via WhatsApp</a
+        >
+        <a class="btn-ghost" href="#projects">Lihat contoh karya</a>
+      </div>
+    </section>
+
+    <div class="sec-divider"></div>
+
     <!-- PROJECTS (dinamis dari API) -->
     <section id="projects">
       <div class="label">Work</div>
@@ -1146,6 +1180,7 @@
           Full Stack &amp; Mobile
         </button>
         <button class="filter-btn" data-cat="iot">IoT &amp; Hardware</button>
+        <button class="filter-btn" data-cat="umkm">Website UMKM</button>
       </div>
       <div class="projects-grid" id="projectsGrid"></div>
     </section>
@@ -1743,5 +1778,6 @@
     <script src="js/projects.js" defer></script>
     <script src="js/contact.js" defer></script>
     <script src="js/content.js" defer></script>
+    <script src="js/services.js" defer></script>
   </body>
 </html>

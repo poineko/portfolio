@@ -6,12 +6,14 @@
     "ai-ds": "AI & Data Science",
     fullstack: "Full Stack & Mobile",
     iot: "IoT & Hardware",
+    umkm: "Website UMKM",
   };
 
   const THUMBS = {
     "ai-ds": `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="#B89BF5" stroke-width="1.5"/><circle cx="24" cy="24" r="4" fill="#B89BF5" opacity=".35"/><circle cx="8" cy="24" r="3" fill="#B89BF5" opacity=".25"/><circle cx="40" cy="24" r="3" fill="#B89BF5" opacity=".25"/><circle cx="24" cy="8" r="3" fill="#B89BF5" opacity=".25"/><circle cx="24" cy="40" r="3" fill="#B89BF5" opacity=".25"/></svg>`,
     fullstack: `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="14" y="4" width="20" height="36" rx="4" stroke="#7EB3FF" stroke-width="1.5"/><rect x="18" y="8" width="12" height="18" rx="2" fill="#7EB3FF" opacity=".12"/><circle cx="24" cy="34" r="2" fill="#7EB3FF" opacity=".4"/></svg>`,
     iot: `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="12" y="12" width="24" height="24" rx="3" stroke="#F5BE71" stroke-width="1.5"/><rect x="19" y="19" width="10" height="10" rx="1" fill="#F5BE71" opacity=".35"/><path d="M18 6v6M24 6v6M30 6v6M18 36v6M24 36v6M30 36v6M6 18h6M6 24h6M6 30h6M36 18h6M36 24h6M36 30h6" stroke="#F5BE71" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg>`,
+    umkm: `<svg width="44" height="44" viewBox="0 0 48 48" fill="none"><path d="M8 20l3-10h26l3 10" stroke="#6FDFB2" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 20v18h28V20" stroke="#6FDFB2" stroke-width="1.5"/><rect x="20" y="28" width="8" height="10" fill="#6FDFB2" opacity=".3"/></svg>`,
   };
 
   let all = [];
@@ -19,13 +21,25 @@
 
   /* ── helpers ── */
   const esc = (s) =>
-    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    String(s ?? "").replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c],
+    );
 
   const safeUrl = (u) => {
     try {
       const x = new URL(u);
       return /^https?:$/.test(x.protocol) ? x.href : "";
-    } catch { return ""; }
+    } catch {
+      return "";
+    }
   };
 
   function toEmbedUrl(u) {
@@ -34,8 +48,11 @@
     const x = new URL(url);
     let id = "";
     if (x.hostname === "youtu.be") id = x.pathname.slice(1);
-    else if (x.hostname.endsWith("youtube.com") && x.pathname === "/watch") id = x.searchParams.get("v") || "";
-    return id ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}` : url;
+    else if (x.hostname.endsWith("youtube.com") && x.pathname === "/watch")
+      id = x.searchParams.get("v") || "";
+    return id
+      ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`
+      : url;
   }
 
   const repoLabel = (u) => (/kaggle\.com/i.test(u) ? "Kaggle" : "GitHub");
@@ -45,8 +62,10 @@
 
   /* ── grid ── */
   function renderSkeleton(n = 6) {
-    grid.innerHTML = Array.from({ length: n }, () =>
-      `<div class="project-card skeleton-card" aria-hidden="true">
+    grid.innerHTML = Array.from(
+      { length: n },
+      () =>
+        `<div class="project-card skeleton-card" aria-hidden="true">
         <div class="project-thumb skeleton"></div>
         <div class="project-body">
           <div class="skeleton sk-line sk-sm"></div>
@@ -54,7 +73,8 @@
           <div class="skeleton sk-line sk-lg"></div>
           <div class="skeleton sk-line sk-lg"></div>
         </div>
-      </div>`).join("");
+      </div>`,
+    ).join("");
   }
 
   function cardHTML(p) {
@@ -62,7 +82,9 @@
     const thumbUrl = safeUrl(p.thumbnailUrl);
     const demo = safeUrl(p.demoUrl);
     const repo = safeUrl(p.repoUrl);
-    const tags = (p.techStack || []).map((t) => `<span class="project-tag">${esc(t)}</span>`).join("");
+    const tags = (p.techStack || [])
+      .map((t) => `<span class="project-tag">${esc(t)}</span>`)
+      .join("");
     return `<article class="project-card${p.isFeatured ? " featured" : ""}" data-slug="${esc(p.slug)}" tabindex="0">
       <div class="project-thumb thumb-${esc(p.category)}">
         <div class="thumb-fallback">${THUMBS[p.category] || ""}</div>
@@ -83,7 +105,8 @@
   }
 
   function render() {
-    const list = activeCat === "all" ? all : all.filter((p) => p.category === activeCat);
+    const list =
+      activeCat === "all" ? all : all.filter((p) => p.category === activeCat);
     grid.innerHTML = list.length
       ? list.map(cardHTML).join("")
       : `<div class="state-box"><p>Belum ada project di kategori ini.</p></div>`;
@@ -110,11 +133,13 @@
 
   document.querySelectorAll(".filter-btn").forEach((btn) =>
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".filter-btn")
+        .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       activeCat = btn.dataset.cat;
       if (all.length) render();
-    })
+    }),
   );
 
   grid.addEventListener("click", (e) => {
@@ -123,7 +148,8 @@
     if (card) openModal(card.dataset.slug);
   });
   grid.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && e.target.matches(".project-card[data-slug]")) openModal(e.target.dataset.slug);
+    if (e.key === "Enter" && e.target.matches(".project-card[data-slug]"))
+      openModal(e.target.dataset.slug);
   });
 
   /* ── modal ── */
@@ -161,8 +187,12 @@
     const repo = safeUrl(p.repoUrl);
     const embed = toEmbedUrl(p.embedUrl);
     const media = p.media || [];
-    const videos = media.filter((m) => m.mediaType === "video" && safeUrl(m.url));
-    const tags = (p.techStack || []).map((t) => `<span class="project-tag">${esc(t)}</span>`).join("");
+    const videos = media.filter(
+      (m) => m.mediaType === "video" && safeUrl(m.url),
+    );
+    const tags = (p.techStack || [])
+      .map((t) => `<span class="project-tag">${esc(t)}</span>`)
+      .join("");
 
     const videoHTML = (m) => {
       const url = safeUrl(m.url);
@@ -183,19 +213,31 @@
           ${repo ? `<a class="btn-ghost" href="${esc(repo)}" target="_blank" rel="noopener noreferrer">${repoLabel(repo)} ↗</a>` : ""}
         </div>
       </header>
-      ${embed ? `<section class="md-sec">
+      ${
+        embed
+          ? `<section class="md-sec">
         <div class="md-label">Interactive Demo</div>
         <div class="embed-wrap"><iframe src="${esc(embed)}" title="Demo ${esc(p.title)}" ${IFRAME_ATTRS}></iframe></div>
         <a class="md-ext" href="${esc(embed)}" target="_blank" rel="noopener noreferrer">Buka di tab baru ↗</a>
-      </section>` : ""}
+      </section>`
+          : ""
+      }
       ${p.problemSolution ? `<section class="md-sec"><div class="md-label">Problem &amp; Solution</div><div class="md-text">${esc(p.problemSolution)}</div></section>` : ""}
       ${p.architectureNotes ? `<section class="md-sec"><div class="md-label">System Architecture</div><div class="md-text">${esc(p.architectureNotes)}</div></section>` : ""}
-      ${gallery.length ? `<section class="md-sec"><div class="md-label">Gallery</div><div class="gallery">
-        ${gallery.map((m, i) => `<figure class="gallery-item">
+      ${
+        gallery.length
+          ? `<section class="md-sec"><div class="md-label">Gallery</div><div class="gallery">
+        ${gallery
+          .map(
+            (m, i) => `<figure class="gallery-item">
           <button type="button" data-lb="${i}"><img src="${esc(safeUrl(m.url))}" alt="${esc(m.caption || p.title)}" loading="lazy"></button>
           ${m.caption ? `<figcaption>${esc(m.caption)}</figcaption>` : ""}
-        </figure>`).join("")}
-      </div></section>` : ""}
+        </figure>`,
+          )
+          .join("")}
+      </div></section>`
+          : ""
+      }
       ${videos.length ? `<section class="md-sec"><div class="md-label">Video</div><div class="md-videos">${videos.map(videoHTML).join("")}</div></section>` : ""}`;
   }
 
