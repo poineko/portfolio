@@ -414,6 +414,10 @@
         background: rgba(245, 190, 113, 0.12);
         color: var(--amber);
       }
+      .cat-umkm {
+        background: rgba(111, 223, 178, 0.12);
+        color: var(--green);
+      }
       .row .order {
         font-family: "DM Mono", monospace;
         color: var(--muted);
@@ -957,6 +961,55 @@
           font-size: 26px;
         }
       }
+      /* ── Kalkulator penawaran ── */
+      .q-row {
+        display: grid;
+        grid-template-columns: 1fr 110px 70px 80px 36px;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+      }
+      .q-ext {
+        grid-template-columns: 1fr 150px 36px;
+      }
+      .q-head span {
+        font-family: "DM Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .q-row .btn {
+        padding: 0;
+      }
+      .q-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 0.5px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .q-line strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .q-total {
+        font-family: "Fraunces", serif;
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 14px;
+      }
+      @media (max-width: 560px) {
+        .q-row {
+          grid-template-columns: 1fr 90px 56px 64px 32px;
+          gap: 6px;
+        }
+        .q-ext {
+          grid-template-columns: 1fr 110px 32px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1001,6 +1054,10 @@
           <button class="tab" data-tab="certifications" type="button">
             Credentials
           </button>
+          <button class="tab" data-tab="services" type="button">
+            Layanan
+          </button>
+          <button class="tab" data-tab="quote" type="button">Penawaran</button>
           <button class="tab" data-tab="messages" type="button">
             Messages <span class="badge" id="unreadBadge" hidden>0</span>
           </button>
@@ -1122,6 +1179,7 @@
                     <option value="ai-ds">AI &amp; Data Science</option>
                     <option value="fullstack">Full Stack &amp; Mobile</option>
                     <option value="iot">IoT &amp; Hardware</option>
+                    <option value="umkm">Website UMKM</option>
                   </select>
                 </label>
                 <label class="field"
@@ -1222,6 +1280,74 @@
           <div class="list" id="contentList"></div>
         </div>
 
+        <!-- Penawaran (kalkulator internal) -->
+        <div id="quoteView" hidden>
+          <div class="page-head">
+            <h1>Kalkulator <em>penawaran</em></h1>
+            <div class="filters">
+              <button class="btn btn-sm" id="q_reset" type="button">
+                Reset
+              </button>
+              <button
+                class="btn btn-sm btn-primary"
+                id="q_copy"
+                type="button"
+              >
+                Salin teks penawaran
+              </button>
+            </div>
+          </div>
+          <div class="editor-grid">
+            <div>
+              <div class="card">
+                <h3>Rincian modul</h3>
+                <div class="q-row q-head">
+                  <span>Modul / fitur</span><span>Kesulitan</span
+                  ><span>Hari</span><span>Jam/hari</span><span></span>
+                </div>
+                <div id="q_modules"></div>
+                <button
+                  class="btn btn-sm"
+                  id="q_addModule"
+                  type="button"
+                  style="margin-top: 10px"
+                >
+                  + Tambah modul
+                </button>
+              </div>
+              <div class="card">
+                <h3>Biaya eksternal</h3>
+                <div id="q_ext"></div>
+                <button
+                  class="btn btn-sm"
+                  id="q_addExt"
+                  type="button"
+                  style="margin-top: 10px"
+                >
+                  + Tambah biaya
+                </button>
+              </div>
+            </div>
+            <aside>
+              <div class="card">
+                <h3>Tarif</h3>
+                <label class="field"
+                  ><span>Tarif per jam (Rp)</span
+                  ><input type="number" id="q_rate" min="0"
+                /></label>
+                <label class="field" style="margin-bottom: 0"
+                  ><span>Margin / kontingensi (%)</span
+                  ><input type="number" id="q_margin" min="0"
+                /></label>
+              </div>
+              <div class="card">
+                <h3>Hasil</h3>
+                <div id="q_result"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
         <!-- Messages -->
         <div id="messagesView" hidden>
           <div class="page-head">
@@ -1275,6 +1401,7 @@
           "ai-ds": "AI & Data Science",
           fullstack: "Full Stack & Mobile",
           iot: "IoT & Hardware",
+          umkm: "Website UMKM",
         };
 
         const $ = (s, r = document) => r.querySelector(s);
@@ -1429,7 +1556,7 @@
         }
 
         /* ───────── Auth / views ───────── */
-        const CONTENT_TABS = ["skills", "experiences", "certifications"];
+        const CONTENT_TABS = ["skills", "experiences", "certifications", "services"];
 
         function showLogin(msg) {
           $("#appView").hidden = true;
@@ -1493,7 +1620,9 @@
           $("#editorView").hidden = true;
           $("#messagesView").hidden = name !== "messages";
           $("#contentView").hidden = !CONTENT_TABS.includes(name);
+          $("#quoteView").hidden = name !== "quote";
           if (name === "messages") loadMessages();
+          if (name === "quote") renderQuote();
           if (CONTENT_TABS.includes(name)) openContent(name);
         }
         document.querySelectorAll(".tab").forEach((t) =>
@@ -2054,7 +2183,14 @@
           google: "accent",
           aws: "amber",
           microsoft: "green",
+          bnsp: "green",
           other: "purple",
+        };
+        const SERVICE_COLOR = {
+          "Digitalisasi & Aplikasi": "accent",
+          "Data Science & Analytics": "amber",
+          "Artificial Intelligence": "purple",
+          "Academic Solutions": "green",
         };
         const ORDER_FIELD = {
           k: "sortOrder",
@@ -2238,6 +2374,64 @@
               color: GROUP_COLOR[x.group] || "purple",
             }),
           },
+          services: {
+            title: "Kelola <em>layanan</em>",
+            add: "+ Tambah layanan",
+            noun: "layanan",
+            list: "/admin/services",
+            save: "/admin/services",
+            fields: [
+              {
+                k: "name",
+                label: "Nama paket *",
+                type: "text",
+                max: 120,
+                req: true,
+              },
+              {
+                k: "category",
+                label: "Kategori",
+                type: "select",
+                def: "Digitalisasi & Aplikasi",
+                options: [
+                  ["Digitalisasi & Aplikasi", "Digitalisasi & Aplikasi"],
+                  ["Data Science & Analytics", "Data Science & Analytics"],
+                  ["Artificial Intelligence", "Artificial Intelligence"],
+                  ["Academic Solutions", "Academic Solutions"],
+                ],
+              },
+              { k: "description", label: "Deskripsi singkat", type: "textarea" },
+              {
+                k: "duration",
+                label: "Estimasi waktu",
+                hint: "contoh: 1-2 Minggu",
+                type: "text",
+                max: 40,
+              },
+              {
+                k: "startPrice",
+                label: "Harga mulai dari (Rp)",
+                type: "number",
+              },
+              {
+                k: "isPublic",
+                label: "Tampil di situs",
+                type: "select",
+                fmt: "bool",
+                def: true,
+                options: [
+                  ["true", "Ya"],
+                  ["false", "Tidak (disembunyikan)"],
+                ],
+              },
+              ORDER_FIELD,
+            ],
+            row: (x) => ({
+              title: x.name,
+              sub: `${x.category} · Rp ${Number(x.startPrice).toLocaleString("id-ID")}${x.isPublic ? "" : " · disembunyikan"}`,
+              color: SERVICE_COLOR[x.category] || "accent",
+            }),
+          },
         };
 
         const cstate = { kind: null, data: {}, cur: null };
@@ -2326,6 +2520,7 @@
         }
 
         function fieldValue(f, item, kind) {
+          if (f.fmt === "bool") return String(item ? item[f.k] : (f.def ?? true));
           if (!item)
             return f.k === "sortOrder"
               ? (cstate.data[kind] || []).length
@@ -2356,6 +2551,7 @@
               }))
               .filter((i) => i.name);
           const v = el.value;
+          if (f.fmt === "bool") return v === "true";
           if (f.type === "number") return Number(v) || 0;
           if (f.fmt === "lines")
             return v
@@ -2440,6 +2636,160 @@
           } finally {
             setLoading(btn, false);
           }
+        });
+
+        /* ───────── Penawaran (kalkulator internal, tersimpan di browser ini) ───────── */
+        const Q_KEY = "artech_quote_v1";
+        // Sama seperti Excel: tingkat kesulitan belum memengaruhi harga.
+        // Ubah angkanya jika ingin berpengaruh, misalnya { Mudah: 1, Sedang: 1.25, Sulit: 1.5 }
+        const Q_LEVEL = { Mudah: 1, Sedang: 1, Sulit: 1 };
+        const Q_DEFAULT = {
+          rate: 50000,
+          margin: 30,
+          modules: [
+            { name: "Desain UI/UX & Wireframe", level: "Mudah", days: 3, hpd: 4 },
+            { name: "Setup Database & Arsitektur", level: "Sedang", days: 2, hpd: 6 },
+            { name: "Backend & API Endpoint", level: "Sulit", days: 5, hpd: 6 },
+            { name: "Frontend Integration", level: "Sedang", days: 5, hpd: 5 },
+            { name: "Testing & Deployment", level: "Mudah", days: 2, hpd: 4 },
+          ],
+          ext: [
+            { name: "Domain & Hosting / Cloud VPS (Tahunan)", cost: 750000 },
+            { name: "Lisensi API / SSL / Plugin", cost: 0 },
+          ],
+        };
+
+        const rp = (n) => "Rp " + Math.round(n).toLocaleString("id-ID");
+        function loadQuote() {
+          try {
+            const s = JSON.parse(localStorage.getItem(Q_KEY));
+            if (s && Array.isArray(s.modules) && Array.isArray(s.ext)) return s;
+          } catch {
+            /* abaikan */
+          }
+          return structuredClone(Q_DEFAULT);
+        }
+        function saveQuote() {
+          try {
+            localStorage.setItem(Q_KEY, JSON.stringify(quote));
+          } catch {
+            /* abaikan */
+          }
+        }
+        let quote = loadQuote();
+
+        function calcQuote() {
+          const num = (v) => Number(v) || 0;
+          const hours = quote.modules.reduce((s, m) => s + num(m.days) * num(m.hpd), 0);
+          const labor = quote.modules.reduce(
+            (s, m) => s + num(m.days) * num(m.hpd) * num(quote.rate) * (Q_LEVEL[m.level] ?? 1),
+            0,
+          );
+          const external = quote.ext.reduce((s, x) => s + num(x.cost), 0);
+          const hpp = labor + external;
+          const margin = (hpp * num(quote.margin)) / 100;
+          return { hours, labor, external, hpp, margin, total: hpp + margin };
+        }
+
+        function renderQuoteResult() {
+          const r = calcQuote();
+          const line = (a, b) =>
+            `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
+          $("#q_result").innerHTML =
+            line("Total jam kerja", `${r.hours} jam`) +
+            line("Biaya tenaga kerja", rp(r.labor)) +
+            line("Biaya eksternal", rp(r.external)) +
+            line("Base cost (HPP)", rp(r.hpp)) +
+            line(`Margin (${Number(quote.margin) || 0}%)`, rp(r.margin)) +
+            `<div class="q-total">${rp(r.total)}</div><p class="hint">Total harga penawaran</p>`;
+        }
+
+        function renderQuote() {
+          $("#q_rate").value = quote.rate;
+          $("#q_margin").value = quote.margin;
+          $("#q_modules").innerHTML = quote.modules
+            .map(
+              (m, i) => `
+            <div class="q-row">
+              <input type="text" data-q="modules.${i}.name" value="${esc(m.name)}" placeholder="Nama modul">
+              <select data-q="modules.${i}.level">${Object.keys(Q_LEVEL)
+                .map((l) => `<option${l === m.level ? " selected" : ""}>${l}</option>`)
+                .join("")}</select>
+              <input type="number" min="0" data-q="modules.${i}.days" value="${Number(m.days) || 0}">
+              <input type="number" min="0" data-q="modules.${i}.hpd" value="${Number(m.hpd) || 0}">
+              <button type="button" class="btn btn-sm btn-danger" data-qrm="modules.${i}" aria-label="Hapus modul">×</button>
+            </div>`,
+            )
+            .join("");
+          $("#q_ext").innerHTML = quote.ext
+            .map(
+              (x, i) => `
+            <div class="q-row q-ext">
+              <input type="text" data-q="ext.${i}.name" value="${esc(x.name)}" placeholder="Nama layanan pihak ketiga">
+              <input type="number" min="0" data-q="ext.${i}.cost" value="${Number(x.cost) || 0}">
+              <button type="button" class="btn btn-sm btn-danger" data-qrm="ext.${i}" aria-label="Hapus biaya">×</button>
+            </div>`,
+            )
+            .join("");
+          renderQuoteResult();
+        }
+
+        async function copyQuote() {
+          const r = calcQuote();
+          const scope = quote.modules.filter((m) => m.name).map((m) => `- ${m.name}`);
+          const text = [
+            "PENAWARAN PROYEK — ARTech by Poi",
+            "",
+            "Lingkup pekerjaan:",
+            ...scope,
+            "",
+            `Total penawaran: ${rp(r.total)}`,
+          ].join("\n");
+          try {
+            await navigator.clipboard.writeText(text);
+            toast("Teks penawaran disalin");
+          } catch {
+            toast("Gagal menyalin", "error");
+          }
+        }
+
+        $("#quoteView").addEventListener("input", (e) => {
+          const k = e.target.dataset.q;
+          if (k) {
+            const [grp, i, f] = k.split(".");
+            quote[grp][Number(i)][f] =
+              e.target.type === "number" ? Number(e.target.value) || 0 : e.target.value;
+          } else if (e.target.id === "q_rate") quote.rate = Number(e.target.value) || 0;
+          else if (e.target.id === "q_margin") quote.margin = Number(e.target.value) || 0;
+          else return;
+          saveQuote();
+          renderQuoteResult();
+        });
+
+        $("#quoteView").addEventListener("click", (e) => {
+          const rm = e.target.closest("[data-qrm]");
+          if (rm) {
+            const [grp, i] = rm.dataset.qrm.split(".");
+            quote[grp].splice(Number(i), 1);
+            saveQuote();
+            return renderQuote();
+          }
+          const id = e.target.id;
+          if (id === "q_addModule") {
+            quote.modules.push({ name: "", level: "Sedang", days: 1, hpd: 6 });
+            saveQuote();
+            renderQuote();
+          } else if (id === "q_addExt") {
+            quote.ext.push({ name: "", cost: 0 });
+            saveQuote();
+            renderQuote();
+          } else if (id === "q_reset") {
+            if (confirm("Kembalikan ke contoh awal?")) {
+              quote = structuredClone(Q_DEFAULT);
+              saveQuote();
+              renderQuote();
+            }
+          } else if (id === "q_copy") copyQuote();
         });
 
         /* ───────── Init ───────── */

@@ -1,0 +1,43 @@
+/* ── Layanan ARTech ── */
+.svc-wrap { margin-top: 40px; display: grid; gap: 36px; }
+.svc-cat {
+  font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+}
+.svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.svc-card {
+  display: flex; flex-direction: column; gap: 10px; padding: 22px;
+  background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--rl);
+  box-shadow: inset 0 2px 0 color-mix(in srgb, var(--c) 50%, transparent);
+  transition: border-color 0.25s, transform 0.25s;
+}
+.svc-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 40%, transparent); }
+.svc-name { font-size: 15px; font-weight: 700; line-height: 1.35; }
+.svc-desc { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; }
+.svc-price { font-family: "Fraunces", serif; font-size: 22px; font-weight: 600; color: var(--c); }
+.svc-price small {
+  display: block; font-family: "DM Mono", monospace; font-size: 10px; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.svc-btn {
+  font-family: "DM Mono", monospace; font-size: 11px; text-align: center;
+  padding: 8px 12px; border: 0.5px solid var(--border2); border-radius: 6px; transition: all 0.18s;
+}
+.svc-btn:hover { border-color: var(--c); color: var(--c); }
+.svc-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 40px; }
+.svc-steps div {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--r);
+  font-size: 13px; color: var(--muted);
+}
+.svc-steps b { font-family: "Fraunces", serif; font-size: 18px; color: var(--accent); }
+.svc-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+
+/* ── Kategori Website UMKM ── */
+.filter-btn[data-cat="umkm"].active { border-color: var(--green); color: var(--green); background: rgba(111, 223, 178, 0.08); }
+.thumb-umkm { background: rgba(111, 223, 178, 0.06); }
+.badge-umkm { background: rgba(111, 223, 178, 0.12); color: var(--green); }
+.project-card:has(.badge-umkm) .project-tag,
+#modalContent header:has(.badge-umkm) .project-tag {
+  color: var(--green); background: rgba(111, 223, 178, 0.1); border-color: rgba(111, 223, 178, 0.3);
+}
