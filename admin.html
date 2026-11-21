@@ -1054,9 +1054,7 @@
           <button class="tab" data-tab="certifications" type="button">
             Credentials
           </button>
-          <button class="tab" data-tab="services" type="button">
-            Layanan
-          </button>
+          <button class="tab" data-tab="services" type="button">Layanan</button>
           <button class="tab" data-tab="quote" type="button">Penawaran</button>
           <button class="tab" data-tab="messages" type="button">
             Messages <span class="badge" id="unreadBadge" hidden>0</span>
@@ -1288,11 +1286,7 @@
               <button class="btn btn-sm" id="q_reset" type="button">
                 Reset
               </button>
-              <button
-                class="btn btn-sm btn-primary"
-                id="q_copy"
-                type="button"
-              >
+              <button class="btn btn-sm btn-primary" id="q_copy" type="button">
                 Salin teks penawaran
               </button>
             </div>
@@ -1556,7 +1550,12 @@
         }
 
         /* ───────── Auth / views ───────── */
-        const CONTENT_TABS = ["skills", "experiences", "certifications", "services"];
+        const CONTENT_TABS = [
+          "skills",
+          "experiences",
+          "certifications",
+          "services",
+        ];
 
         function showLogin(msg) {
           $("#appView").hidden = true;
@@ -2186,6 +2185,12 @@
           bnsp: "green",
           other: "purple",
         };
+        const rupiahRange = (x) => {
+          const f = (n) => "Rp " + Number(n).toLocaleString("id-ID");
+          return x.priceMax && x.priceMax > x.startPrice
+            ? `${f(x.startPrice)} – ${f(x.priceMax)}`
+            : f(x.startPrice);
+        };
         const SERVICE_COLOR = {
           "Digitalisasi & Aplikasi": "accent",
           "Data Science & Analytics": "amber",
@@ -2400,7 +2405,11 @@
                   ["Academic Solutions", "Academic Solutions"],
                 ],
               },
-              { k: "description", label: "Deskripsi singkat", type: "textarea" },
+              {
+                k: "description",
+                label: "Deskripsi singkat",
+                type: "textarea",
+              },
               {
                 k: "duration",
                 label: "Estimasi waktu",
@@ -2408,10 +2417,44 @@
                 type: "text",
                 max: 40,
               },
-              {
+                            {
                 k: "startPrice",
-                label: "Harga mulai dari (Rp)",
+                label: "Harga terendah (Rp)",
                 type: "number",
+              },
+              {
+                k: "priceMax",
+                label: "Harga tertinggi (Rp)",
+                hint: "kosongkan jika harga tunggal",
+                type: "number",
+              },
+              {
+                k: "includes",
+                label: "Yang didapat klien",
+                hint: "satu baris = satu poin",
+                type: "textarea",
+                fmt: "lines",
+              },
+              {
+                k: "excludes",
+                label: "Tidak termasuk",
+                hint: "satu baris = satu poin",
+                type: "textarea",
+                fmt: "lines",
+              },
+              {
+                k: "idealFor",
+                label: "Cocok untuk",
+                hint: "contoh: warung, toko kecil, usaha jasa",
+                type: "text",
+                max: 200,
+              },
+              {
+                k: "revisions",
+                label: "Revisi",
+                hint: "contoh: 2 kali revisi",
+                type: "text",
+                max: 80,
               },
               {
                 k: "isPublic",
@@ -2428,7 +2471,7 @@
             ],
             row: (x) => ({
               title: x.name,
-              sub: `${x.category} · Rp ${Number(x.startPrice).toLocaleString("id-ID")}${x.isPublic ? "" : " · disembunyikan"}`,
+                            sub: `${x.category} · ${rupiahRange(x)}${x.isPublic ? "" : " · disembunyikan"}`,
               color: SERVICE_COLOR[x.category] || "accent",
             }),
           },
@@ -2520,7 +2563,8 @@
         }
 
         function fieldValue(f, item, kind) {
-          if (f.fmt === "bool") return String(item ? item[f.k] : (f.def ?? true));
+          if (f.fmt === "bool")
+            return String(item ? item[f.k] : (f.def ?? true));
           if (!item)
             return f.k === "sortOrder"
               ? (cstate.data[kind] || []).length
@@ -2647,8 +2691,18 @@
           rate: 50000,
           margin: 30,
           modules: [
-            { name: "Desain UI/UX & Wireframe", level: "Mudah", days: 3, hpd: 4 },
-            { name: "Setup Database & Arsitektur", level: "Sedang", days: 2, hpd: 6 },
+            {
+              name: "Desain UI/UX & Wireframe",
+              level: "Mudah",
+              days: 3,
+              hpd: 4,
+            },
+            {
+              name: "Setup Database & Arsitektur",
+              level: "Sedang",
+              days: 2,
+              hpd: 6,
+            },
             { name: "Backend & API Endpoint", level: "Sulit", days: 5, hpd: 6 },
             { name: "Frontend Integration", level: "Sedang", days: 5, hpd: 5 },
             { name: "Testing & Deployment", level: "Mudah", days: 2, hpd: 4 },
@@ -2680,9 +2734,17 @@
 
         function calcQuote() {
           const num = (v) => Number(v) || 0;
-          const hours = quote.modules.reduce((s, m) => s + num(m.days) * num(m.hpd), 0);
+          const hours = quote.modules.reduce(
+            (s, m) => s + num(m.days) * num(m.hpd),
+            0,
+          );
           const labor = quote.modules.reduce(
-            (s, m) => s + num(m.days) * num(m.hpd) * num(quote.rate) * (Q_LEVEL[m.level] ?? 1),
+            (s, m) =>
+              s +
+              num(m.days) *
+                num(m.hpd) *
+                num(quote.rate) *
+                (Q_LEVEL[m.level] ?? 1),
             0,
           );
           const external = quote.ext.reduce((s, x) => s + num(x.cost), 0);
@@ -2713,7 +2775,10 @@
             <div class="q-row">
               <input type="text" data-q="modules.${i}.name" value="${esc(m.name)}" placeholder="Nama modul">
               <select data-q="modules.${i}.level">${Object.keys(Q_LEVEL)
-                .map((l) => `<option${l === m.level ? " selected" : ""}>${l}</option>`)
+                .map(
+                  (l) =>
+                    `<option${l === m.level ? " selected" : ""}>${l}</option>`,
+                )
                 .join("")}</select>
               <input type="number" min="0" data-q="modules.${i}.days" value="${Number(m.days) || 0}">
               <input type="number" min="0" data-q="modules.${i}.hpd" value="${Number(m.hpd) || 0}">
@@ -2736,7 +2801,9 @@
 
         async function copyQuote() {
           const r = calcQuote();
-          const scope = quote.modules.filter((m) => m.name).map((m) => `- ${m.name}`);
+          const scope = quote.modules
+            .filter((m) => m.name)
+            .map((m) => `- ${m.name}`);
           const text = [
             "PENAWARAN PROYEK — ARTech by Poi",
             "",
@@ -2758,9 +2825,13 @@
           if (k) {
             const [grp, i, f] = k.split(".");
             quote[grp][Number(i)][f] =
-              e.target.type === "number" ? Number(e.target.value) || 0 : e.target.value;
-          } else if (e.target.id === "q_rate") quote.rate = Number(e.target.value) || 0;
-          else if (e.target.id === "q_margin") quote.margin = Number(e.target.value) || 0;
+              e.target.type === "number"
+                ? Number(e.target.value) || 0
+                : e.target.value;
+          } else if (e.target.id === "q_rate")
+            quote.rate = Number(e.target.value) || 0;
+          else if (e.target.id === "q_margin")
+            quote.margin = Number(e.target.value) || 0;
           else return;
           saveQuote();
           renderQuoteResult();

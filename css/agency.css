@@ -41,3 +41,35 @@
 #modalContent header:has(.badge-umkm) .project-tag {
   color: var(--green); background: rgba(111, 223, 178, 0.1); border-color: rgba(111, 223, 178, 0.3);
 }
+
+
+/* ── Rentang harga & detail layanan ── */
+.svc-price.is-range { font-size: 17px; line-height: 1.35; }
+.svc-actions { display: flex; gap: 8px; }
+.svc-actions .svc-btn { flex: 1; background: transparent; color: var(--text); cursor: pointer; }
+
+.svc-dialog {
+  width: min(640px, calc(100% - 24px)); max-height: calc(100vh - 32px); margin: auto; padding: 0;
+  overflow-y: auto; background: var(--bg2); color: var(--text);
+  border: 0.5px solid var(--border2); border-radius: var(--rl);
+}
+.svc-dialog::backdrop { background: rgba(0, 0, 0, 0.72); backdrop-filter: blur(6px); }
+.svc-d-body { padding: 28px; }
+.svc-d-cat { font-family: "DM Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c); }
+.svc-d-body h3 { font-family: "Fraunces", serif; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 6px 0 8px; }
+.svc-d-desc { color: var(--muted); }
+.svc-d-price { font-family: "Fraunces", serif; font-size: 22px; font-weight: 600; color: var(--c); margin-top: 14px; }
+.svc-d-price small { display: block; font-family: "DM Mono", monospace; font-size: 10px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.svc-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 22px 0 4px; }
+.svc-facts div { background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--r); padding: 12px 14px; }
+.svc-facts dt { font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.svc-facts dd { font-size: 14px; margin-top: 2px; }
+.svc-d-body h4 { font-family: "DM Mono", monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 22px 0 10px; }
+.svc-list { list-style: none; display: grid; gap: 8px; }
+.svc-list li { position: relative; padding-left: 28px; font-size: 14px; line-height: 1.6; }
+.svc-list li::before { position: absolute; left: 0; top: 2px; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; font-size: 11px; font-weight: 700; line-height: 1; }
+.svc-list.yes li::before { content: "✓"; background: rgba(111, 223, 178, 0.14); color: var(--green); }
+.svc-list.no li { color: var(--muted); }
+.svc-list.no li::before { content: "✕"; background: rgba(255, 140, 140, 0.12); color: #ff8c8c; }
+.svc-note { margin-top: 22px; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--muted); }
+.svc-d-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
