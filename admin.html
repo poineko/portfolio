@@ -1010,6 +1010,62 @@
           grid-template-columns: 1fr 110px 32px;
         }
       }
+
+      /* ── Dokumen bisnis ── */
+      input[type="date"] {
+        width: 100%;
+        background: var(--bg3);
+        border: 0.5px solid var(--border);
+        border-radius: var(--r);
+        padding: 10px 14px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+        color-scheme: dark;
+      }
+      input[type="date"]:focus {
+        border-color: var(--accent);
+      }
+      .drow {
+        display: grid;
+        grid-template-columns: 1.2fr 1.2fr 150px 130px;
+        gap: 16px;
+        align-items: center;
+        padding: 14px 18px;
+        border-top: 0.5px solid var(--border);
+      }
+      .drow:first-child {
+        border-top: 0;
+      }
+      .drow:hover {
+        background: var(--bg3);
+      }
+      .d-status {
+        padding: 7px 10px;
+        font-size: 13px;
+      }
+      #docForm {
+        max-width: 720px;
+      }
+      .q-row.i-row {
+        grid-template-columns: 1fr 70px 140px 36px;
+      }
+      .i-total {
+        margin-top: 6px;
+      }
+      @media (max-width: 760px) {
+        .drow {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .drow .actions {
+          justify-content: flex-start;
+        }
+        .q-row.i-row {
+          grid-template-columns: 1fr 56px 100px 32px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1056,6 +1112,8 @@
           </button>
           <button class="tab" data-tab="services" type="button">Layanan</button>
           <button class="tab" data-tab="quote" type="button">Penawaran</button>
+          <button class="tab" data-tab="docs" type="button">Dokumen</button>
+          <button class="tab" data-tab="clients" type="button">Klien</button>
           <button class="tab" data-tab="messages" type="button">
             Messages <span class="badge" id="unreadBadge" hidden>0</span>
           </button>
@@ -1342,6 +1400,48 @@
           </div>
         </div>
 
+        <!-- Dokumen bisnis -->
+        <div id="docsView" hidden>
+          <div class="page-head">
+            <h1>Dokumen <em>bisnis</em></h1>
+            <div class="filters">
+              <button class="btn btn-sm" id="d_settings" type="button">
+                Pengaturan usaha
+              </button>
+              <button
+                class="btn btn-sm btn-primary"
+                id="d_newInvoice"
+                type="button"
+              >
+                + Invoice
+              </button>
+            </div>
+          </div>
+          <div class="filters" style="margin-bottom: 16px">
+            <button class="btn btn-sm" data-df="all" type="button">
+              Semua
+            </button>
+            <button
+              class="btn btn-sm btn-ghost"
+              data-df="invoice"
+              type="button"
+            >
+              Invoice
+            </button>
+            <button
+              class="btn btn-sm btn-ghost"
+              data-df="contract"
+              type="button"
+            >
+              Kontrak
+            </button>
+            <button class="btn btn-sm btn-ghost" data-df="brief" type="button">
+              Brief
+            </button>
+          </div>
+          <div class="list" id="docList"></div>
+        </div>
+
         <!-- Messages -->
         <div id="messagesView" hidden>
           <div class="page-head">
@@ -1378,6 +1478,25 @@
         <div class="modal-foot">
           <button type="button" class="btn" data-close>Batal</button>
           <button type="submit" class="btn btn-primary" id="mSave">
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal" id="docModal" hidden>
+      <div class="modal-bg" data-dclose></div>
+      <form class="modal-panel" id="docForm" novalidate>
+        <div class="modal-head">
+          <h3 id="dTitle"></h3>
+          <button type="button" class="modal-x" data-dclose aria-label="Tutup">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body" id="dFields"></div>
+        <div class="modal-foot">
+          <button type="button" class="btn" data-dclose>Batal</button>
+          <button type="submit" class="btn btn-primary" id="dSave">
             Simpan
           </button>
         </div>
@@ -1555,6 +1674,7 @@
           "experiences",
           "certifications",
           "services",
+          "clients",
         ];
 
         function showLogin(msg) {
@@ -1620,9 +1740,10 @@
           $("#messagesView").hidden = name !== "messages";
           $("#contentView").hidden = !CONTENT_TABS.includes(name);
           $("#quoteView").hidden = name !== "quote";
+          $("#docsView").hidden = name !== "docs";
           if (name === "messages") loadMessages();
           if (name === "quote") renderQuote();
-          if (CONTENT_TABS.includes(name)) openContent(name);
+          if (name === "docs") openDocs();
         }
         document.querySelectorAll(".tab").forEach((t) =>
           t.addEventListener("click", () => {
@@ -2417,7 +2538,7 @@
                 type: "text",
                 max: 40,
               },
-                            {
+              {
                 k: "startPrice",
                 label: "Harga terendah (Rp)",
                 type: "number",
@@ -2471,8 +2592,39 @@
             ],
             row: (x) => ({
               title: x.name,
-                            sub: `${x.category} · ${rupiahRange(x)}${x.isPublic ? "" : " · disembunyikan"}`,
+              sub: `${x.category} · ${rupiahRange(x)}${x.isPublic ? "" : " · disembunyikan"}`,
               color: SERVICE_COLOR[x.category] || "accent",
+            }),
+          },
+          clients: {
+            title: "Kelola <em>klien</em>",
+            add: "+ Tambah klien",
+            noun: "klien",
+            list: "/admin/clients",
+            save: "/admin/clients",
+            fields: [
+              {
+                k: "name",
+                label: "Nama kontak *",
+                type: "text",
+                max: 120,
+                req: true,
+              },
+              { k: "business", label: "Nama usaha", type: "text", max: 150 },
+              {
+                k: "phone",
+                label: "Telepon / WhatsApp",
+                type: "text",
+                max: 40,
+              },
+              { k: "email", label: "Email", type: "text", max: 200 },
+              { k: "address", label: "Alamat", type: "text", max: 300 },
+              { k: "notes", label: "Catatan", type: "textarea" },
+            ],
+            row: (x) => ({
+              title: x.business ? `${x.business} — ${x.name}` : x.name,
+              sub: `${x.phone || "tanpa nomor"} · ${x.docCount || 0} dokumen`,
+              color: "accent",
             }),
           },
         };
@@ -2508,7 +2660,7 @@
                   return `<div class="crow">
             <span class="cdot" style="background:var(--${esc(r.color)})"></span>
             <div><div class="p-title">${esc(r.title)}</div><div class="p-slug">${esc(r.sub)}</div></div>
-            <div class="order">#${x.sortOrder}</div>
+            <div class="order">${x.sortOrder != null ? "#" + x.sortOrder : ""}</div>
             <div class="actions">
               <button class="btn btn-sm" data-edit="${x.id}" type="button">Edit</button>
               <button class="btn btn-sm btn-danger" data-del="${x.id}" type="button">Hapus</button>
@@ -2861,6 +3013,310 @@
               renderQuote();
             }
           } else if (id === "q_copy") copyQuote();
+        });
+
+                /* ───────── Dokumen bisnis ───────── */
+        const DOC_LABEL = { invoice: "Invoice", contract: "Kontrak", brief: "Brief" };
+        const DOC_STATUS = {
+          invoice: ["draft", "sent", "paid", "cancelled"],
+          contract: ["draft", "sent", "signed", "cancelled"],
+          brief: ["draft", "sent", "answered", "cancelled"],
+        };
+        const STATUS_LABEL = {
+          draft: "Draft",
+          sent: "Terkirim",
+          paid: "Lunas",
+          signed: "Ditandatangani",
+          answered: "Dijawab",
+          cancelled: "Dibatalkan",
+        };
+        const dstate = { docs: [], clients: [], filter: "all", mode: null, editId: null };
+        const dm = $("#docModal");
+        const todayWIB = () => new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jakarta" }).format(new Date());
+
+        function openDocs() {
+          loadDocs();
+        }
+
+        async function loadDocs() {
+          const el = $("#docList");
+          el.innerHTML = `<div class="empty"><span>Memuat...</span></div>`;
+          try {
+            const [docs, clients] = await Promise.all([request("/admin/documents"), request("/admin/clients")]);
+            dstate.docs = docs;
+            dstate.clients = clients;
+            renderDocs();
+          } catch (err) {
+            el.innerHTML = `<div class="empty"><span>${esc(err.message)}</span><button class="btn btn-sm" id="d_retry" type="button">Coba lagi</button></div>`;
+          }
+        }
+
+        function renderDocs() {
+          document
+            .querySelectorAll("[data-df]")
+            .forEach((b) => b.classList.toggle("btn-ghost", b.dataset.df !== dstate.filter));
+          const list = dstate.filter === "all" ? dstate.docs : dstate.docs.filter((d) => d.type === dstate.filter);
+          $("#docList").innerHTML = list.length
+            ? list
+                .map(
+                  (d) => `
+              <div class="drow">
+                <div><div class="p-title">${esc(d.number)}</div><div class="p-slug">${esc(DOC_LABEL[d.type] || d.type)} · ${esc(d.issuedAt)}</div></div>
+                <div><div>${esc(d.clientName)}</div><div class="p-slug">${esc(d.clientBusiness || "")}</div></div>
+                <select class="d-status" data-dstatus="${d.id}" aria-label="Status ${esc(d.number)}">
+                  ${(DOC_STATUS[d.type] || [])
+                    .map((s) => `<option value="${s}"${s === d.status ? " selected" : ""}>${STATUS_LABEL[s]}</option>`)
+                    .join("")}
+                </select>
+                <div class="actions">
+                  <button class="btn btn-sm" data-dedit="${d.id}" type="button">Edit</button>
+                  <button class="btn btn-sm btn-danger" data-ddel="${d.id}" type="button">Hapus</button>
+                </div>
+              </div>`,
+                )
+                .join("")
+            : `<div class="empty"><span>Belum ada dokumen.</span><button class="btn btn-primary btn-sm" data-dnew type="button">+ Buat invoice pertama</button></div>`;
+        }
+
+        /* jendela form */
+        function openDocModal(title, html) {
+          $("#dTitle").textContent = title;
+          $("#dFields").innerHTML = html;
+          dm.hidden = false;
+          document.body.style.overflow = "hidden";
+          const first = $("#dFields input, #dFields select, #dFields textarea");
+          if (first) first.focus();
+        }
+
+        function closeDocModal() {
+          dm.hidden = true;
+          document.body.style.overflow = "";
+          dstate.mode = null;
+          dstate.editId = null;
+        }
+
+        /* invoice */
+        function invoiceFormHTML(doc) {
+          const d = (doc && doc.data) || {};
+          const clientOpts = dstate.clients
+            .map(
+              (c) =>
+                `<option value="${c.id}"${doc && doc.clientId === c.id ? " selected" : ""}>${esc(c.name)}${c.business ? " — " + esc(c.business) : ""}</option>`,
+            )
+            .join("");
+          return `
+            <label class="field"><span>Klien *</span><select id="i_client">${clientOpts}</select></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <label class="field"><span>Tanggal terbit</span><input type="date" id="i_issued" value="${esc(doc ? doc.issuedAt : todayWIB())}"></label>
+              <label class="field"><span>Jatuh tempo</span><input type="date" id="i_due" value="${esc(d.dueDate || "")}"></label>
+            </div>
+            <label class="field"><span>Nama proyek / paket</span><input type="text" id="i_project" maxlength="200" value="${esc(d.projectName || "")}"></label>
+            <div class="field">
+              <span>Rincian tagihan</span>
+              <div class="q-row i-row q-head"><span>Deskripsi</span><span>Jumlah</span><span>Harga satuan (Rp)</span><span></span></div>
+              <div id="i_items"></div>
+              <button class="btn btn-sm" type="button" id="i_add" style="align-self:flex-start">+ Tambah baris</button>
+            </div>
+            <label class="field"><span>Uang muka (DP) <i class="hint">— persen dari total, opsional</i></span><input type="number" id="i_dp" min="0" max="100" value="${Number(d.dpPercent) || 0}"></label>
+            <label class="field"><span>Catatan</span><textarea id="i_notes" style="min-height:80px">${esc(d.notes || "")}</textarea></label>
+            <div id="i_total" class="i-total"></div>`;
+        }
+
+        function addInvoiceRow(it) {
+          const d = it || { description: "", qty: 1, price: 0 };
+          const row = document.createElement("div");
+          row.className = "q-row i-row i-line";
+          row.innerHTML = `
+            <input type="text" class="i-desc" maxlength="200" placeholder="Deskripsi" value="${esc(d.description)}">
+            <input type="number" class="i-qty" min="0" value="${Number(d.qty) || 0}">
+            <input type="number" class="i-price" min="0" value="${Number(d.price) || 0}">
+            <button type="button" class="btn btn-sm btn-danger i-rm" aria-label="Hapus baris">×</button>`;
+          $("#i_items").appendChild(row);
+        }
+
+        function invoiceItems() {
+          return [...document.querySelectorAll("#i_items .i-line")].map((r) => ({
+            description: r.querySelector(".i-desc").value.trim(),
+            qty: Number(r.querySelector(".i-qty").value) || 0,
+            price: Number(r.querySelector(".i-price").value) || 0,
+          }));
+        }
+
+        function renderInvoiceTotal() {
+          const box = $("#i_total");
+          if (!box) return;
+          const sub = invoiceItems().reduce((s, i) => s + i.qty * i.price, 0);
+          const dp = Math.min(100, Math.max(0, Number($("#i_dp").value) || 0));
+          const dpAmt = Math.round((sub * dp) / 100);
+          const line = (a, b) => `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
+          box.innerHTML =
+            line("Subtotal", rp(sub)) +
+            (dp ? line(`Uang muka (${dp}%)`, rp(dpAmt)) + line("Sisa pembayaran", rp(sub - dpAmt)) : "") +
+            `<div class="q-total">${rp(sub)}</div><p class="hint">Total tagihan</p>`;
+        }
+
+        function openInvoiceForm(doc) {
+          if (!dstate.clients.length) {
+            toast("Tambah klien dulu di tab Klien", "error");
+            return;
+          }
+          dstate.mode = "invoice";
+          dstate.editId = doc ? doc.id : null;
+          openDocModal(doc ? `Edit ${doc.number}` : "Invoice baru", invoiceFormHTML(doc));
+          const items = doc && doc.data.items && doc.data.items.length ? doc.data.items : [null];
+          items.forEach((it) => addInvoiceRow(it));
+          renderInvoiceTotal();
+        }
+
+        async function saveInvoice() {
+          const clientId = Number($("#i_client").value);
+          if (!clientId) throw new Error("Pilih klien dulu");
+          const items = invoiceItems().filter((i) => i.description);
+          if (!items.length) throw new Error("Isi minimal satu baris rincian tagihan");
+          const data = {
+            projectName: $("#i_project").value.trim(),
+            dueDate: $("#i_due").value,
+            items,
+            dpPercent: Math.min(100, Math.max(0, Number($("#i_dp").value) || 0)),
+            notes: $("#i_notes").value.trim(),
+          };
+          const issuedAt = $("#i_issued").value || undefined;
+          if (dstate.editId)
+            await request(`/admin/documents/${dstate.editId}`, { method: "PUT", body: { clientId, issuedAt, data } });
+          else await request("/admin/documents", { method: "POST", body: { type: "invoice", clientId, issuedAt, data } });
+        }
+
+        /* pengaturan usaha */
+        const PROFILE_FIELDS = [
+          ["businessName", "Nama usaha", "text"],
+          ["ownerName", "Nama penanggung jawab", "text"],
+          ["address", "Alamat", "text"],
+          ["city", "Kota (untuk tanda tangan)", "text"],
+          ["phone", "Telepon / WhatsApp", "text"],
+          ["email", "Email", "text"],
+          ["website", "Website", "text"],
+          ["paymentInfo", "Info pembayaran (rekening / QRIS)", "textarea"],
+          ["footerNote", "Catatan kaki dokumen", "text"],
+        ];
+
+        async function openProfileForm() {
+          try {
+            const s = await request("/admin/settings");
+            const p = s.docProfile || {};
+            dstate.mode = "profile";
+            openDocModal(
+              "Pengaturan usaha",
+              PROFILE_FIELDS.map(([k, label, type]) =>
+                type === "textarea"
+                  ? `<label class="field"><span>${label}</span><textarea id="p_${k}">${esc(p[k] || "")}</textarea></label>`
+                  : `<label class="field"><span>${label}</span><input type="text" id="p_${k}" value="${esc(p[k] || "")}"></label>`,
+              ).join(""),
+            );
+          } catch (err) {
+            toast(err.message, "error");
+          }
+        }
+
+        async function saveProfile() {
+          const body = {};
+          PROFILE_FIELDS.forEach(([k]) => (body[k] = $("#p_" + k).value.trim()));
+          await request("/admin/settings/docProfile", { method: "PUT", body });
+        }
+
+        /* event */
+        dm.addEventListener("click", (e) => {
+          if (e.target.closest("[data-dclose]")) return closeDocModal();
+          if (e.target.closest("#i_add")) {
+            addInvoiceRow();
+            renderInvoiceTotal();
+            const descs = document.querySelectorAll("#i_items .i-desc");
+            descs[descs.length - 1].focus();
+            return;
+          }
+          const rm = e.target.closest(".i-rm");
+          if (rm) {
+            rm.closest(".i-line").remove();
+            renderInvoiceTotal();
+          }
+        });
+        dm.addEventListener("input", () => {
+          if (dstate.mode === "invoice") renderInvoiceTotal();
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !dm.hidden) closeDocModal();
+        });
+
+        $("#docForm").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const mode = dstate.mode;
+          const btn = $("#dSave");
+          setLoading(btn, true, "Menyimpan...");
+          try {
+            if (mode === "invoice") await saveInvoice();
+            else if (mode === "profile") await saveProfile();
+            closeDocModal();
+            toast("Tersimpan");
+            if (mode === "invoice") loadDocs();
+          } catch (err) {
+            toast(err.message, "error");
+          } finally {
+            setLoading(btn, false);
+          }
+        });
+
+        $("#docsView").addEventListener("click", async (e) => {
+          const f = e.target.closest("[data-df]");
+          if (f) {
+            dstate.filter = f.dataset.df;
+            return renderDocs();
+          }
+          if (e.target.closest("#d_retry")) return loadDocs();
+          if (e.target.closest("#d_settings")) return openProfileForm();
+          if (e.target.closest("#d_newInvoice") || e.target.closest("[data-dnew]")) return openInvoiceForm();
+
+          const ed = e.target.closest("[data-dedit]");
+          if (ed) {
+            try {
+              const doc = await request(`/admin/documents/${ed.dataset.dedit}`);
+              if (doc.type === "invoice") openInvoiceForm(doc);
+              else toast("Editor kontrak dan brief menyusul di langkah berikutnya", "error");
+            } catch (err) {
+              toast(err.message, "error");
+            }
+            return;
+          }
+
+          const del = e.target.closest("[data-ddel]");
+          if (del) {
+            if (!confirm("Hapus dokumen ini?")) return;
+            del.disabled = true;
+            try {
+              await request(`/admin/documents/${del.dataset.ddel}`, { method: "DELETE" });
+              toast("Dokumen dihapus");
+              loadDocs();
+            } catch (err) {
+              del.disabled = false;
+              toast(err.message, "error");
+            }
+          }
+        });
+
+        $("#docsView").addEventListener("change", async (e) => {
+          const sel = e.target.closest("[data-dstatus]");
+          if (!sel) return;
+          const id = Number(sel.dataset.dstatus);
+          const doc = dstate.docs.find((d) => d.id === id);
+          sel.disabled = true;
+          try {
+            await request(`/admin/documents/${id}`, { method: "PUT", body: { status: sel.value } });
+            if (doc) doc.status = sel.value;
+            toast("Status diperbarui");
+          } catch (err) {
+            if (doc) sel.value = doc.status;
+            toast(err.message, "error");
+          } finally {
+            sel.disabled = false;
+          }
         });
 
         /* ───────── Init ───────── */
