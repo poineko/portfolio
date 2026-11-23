@@ -1741,6 +1741,7 @@
           $("#contentView").hidden = !CONTENT_TABS.includes(name);
           $("#quoteView").hidden = name !== "quote";
           $("#docsView").hidden = name !== "docs";
+          if (CONTENT_TABS.includes(name)) openContent(name);
           if (name === "messages") loadMessages();
           if (name === "quote") renderQuote();
           if (name === "docs") openDocs();
