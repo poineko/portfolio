@@ -1336,61 +1336,48 @@
           <div class="list" id="contentList"></div>
         </div>
 
-        <!-- Penawaran (kalkulator internal) -->
+                <!-- Penawaran (kalkulator internal) -->
         <div id="quoteView" hidden>
           <div class="page-head">
             <h1>Kalkulator <em>penawaran</em></h1>
             <div class="filters">
-              <button class="btn btn-sm" id="q_reset" type="button">
-                Reset
-              </button>
-              <button class="btn btn-sm btn-primary" id="q_copy" type="button">
-                Salin teks penawaran
-              </button>
+              <button class="btn btn-sm" id="q_reset" type="button">Reset</button>
+              <button class="btn btn-sm" id="q_copy" type="button">Salin teks</button>
+              <button class="btn btn-sm" id="q_saveNew" type="button" hidden>Simpan sebagai baru</button>
+              <button class="btn btn-sm btn-primary" id="q_save" type="button">Simpan penawaran</button>
             </div>
           </div>
           <div class="editor-grid">
             <div>
               <div class="card">
+                <h3>Untuk siapa</h3>
+                <p class="hint" id="q_editing" style="margin-bottom: 12px" hidden></p>
+                <label class="field"><span>Klien</span><select id="q_client"></select></label>
+                <label class="field" style="margin-bottom: 0"><span>Nama proyek / paket</span><input type="text" id="q_project" maxlength="200"></label>
+              </div>
+              <div class="card">
                 <h3>Rincian modul</h3>
                 <div class="q-row q-head">
-                  <span>Modul / fitur</span><span>Kesulitan</span
-                  ><span>Hari</span><span>Jam/hari</span><span></span>
+                  <span>Modul / fitur</span><span>Kesulitan</span><span>Hari</span><span>Jam/hari</span><span></span>
                 </div>
                 <div id="q_modules"></div>
-                <button
-                  class="btn btn-sm"
-                  id="q_addModule"
-                  type="button"
-                  style="margin-top: 10px"
-                >
-                  + Tambah modul
-                </button>
+                <button class="btn btn-sm" id="q_addModule" type="button" style="margin-top: 10px">+ Tambah modul</button>
               </div>
               <div class="card">
                 <h3>Biaya eksternal</h3>
                 <div id="q_ext"></div>
-                <button
-                  class="btn btn-sm"
-                  id="q_addExt"
-                  type="button"
-                  style="margin-top: 10px"
-                >
-                  + Tambah biaya
-                </button>
+                <button class="btn btn-sm" id="q_addExt" type="button" style="margin-top: 10px">+ Tambah biaya</button>
               </div>
             </div>
             <aside>
               <div class="card">
                 <h3>Tarif</h3>
-                <label class="field"
-                  ><span>Tarif per jam (Rp)</span
-                  ><input type="number" id="q_rate" min="0"
-                /></label>
-                <label class="field" style="margin-bottom: 0"
-                  ><span>Margin / kontingensi (%)</span
-                  ><input type="number" id="q_margin" min="0"
-                /></label>
+                <label class="field"><span>Tarif per jam (Rp)</span><input type="number" id="q_rate" min="0"></label>
+                <label class="field" style="margin-bottom: 0"><span>Margin / kontingensi (%)</span><input type="number" id="q_margin" min="0"></label>
+              </div>
+              <div class="card">
+                <h3>Potongan harga</h3>
+                <label class="field" style="margin-bottom: 0"><span>Potongan (Rp) <i class="hint">— menyesuaikan harga fix</i></span><input type="number" id="q_discount" min="0"></label>
               </div>
               <div class="card">
                 <h3>Hasil</h3>
@@ -1405,39 +1392,17 @@
           <div class="page-head">
             <h1>Dokumen <em>bisnis</em></h1>
             <div class="filters">
-              <button class="btn btn-sm" id="d_settings" type="button">
-                Pengaturan usaha
-              </button>
-              <button
-                class="btn btn-sm btn-primary"
-                id="d_newInvoice"
-                type="button"
-              >
-                + Invoice
-              </button>
+              <button class="btn btn-sm" id="d_settings" type="button">Pengaturan usaha</button>
+              <button class="btn btn-sm" id="d_newQuote" type="button">+ Penawaran</button>
+              <button class="btn btn-sm btn-primary" id="d_newInvoice" type="button">+ Invoice</button>
             </div>
           </div>
           <div class="filters" style="margin-bottom: 16px">
-            <button class="btn btn-sm" data-df="all" type="button">
-              Semua
-            </button>
-            <button
-              class="btn btn-sm btn-ghost"
-              data-df="invoice"
-              type="button"
-            >
-              Invoice
-            </button>
-            <button
-              class="btn btn-sm btn-ghost"
-              data-df="contract"
-              type="button"
-            >
-              Kontrak
-            </button>
-            <button class="btn btn-sm btn-ghost" data-df="brief" type="button">
-              Brief
-            </button>
+            <button class="btn btn-sm" data-df="all" type="button">Semua</button>
+            <button class="btn btn-sm btn-ghost" data-df="quote" type="button">Penawaran</button>
+            <button class="btn btn-sm btn-ghost" data-df="invoice" type="button">Invoice</button>
+            <button class="btn btn-sm btn-ghost" data-df="contract" type="button">Kontrak</button>
+            <button class="btn btn-sm btn-ghost" data-df="brief" type="button">Brief</button>
           </div>
           <div class="list" id="docList"></div>
         </div>
@@ -2611,7 +2576,7 @@
                 max: 120,
                 req: true,
               },
-              { k: "business", label: "Nama usaha", type: "text", max: 150 },
+              { k: "business", label: "Nama usaha (kosongkan jika perorangan)", type: "text", max: 150 },
               {
                 k: "phone",
                 label: "Telepon / WhatsApp",
@@ -2624,7 +2589,7 @@
             ],
             row: (x) => ({
               title: x.business ? `${x.business} — ${x.name}` : x.name,
-              sub: `${x.phone || "tanpa nomor"} · ${x.docCount || 0} dokumen`,
+              sub: `${x.business ? "Usaha" : "Perorangan"} · ${x.phone || "tanpa nomor"} · ${x.docCount || 0} dokumen`,
               color: "accent",
             }),
           },
@@ -2835,27 +2800,22 @@
           }
         });
 
-        /* ───────── Penawaran (kalkulator internal, tersimpan di browser ini) ───────── */
-        const Q_KEY = "artech_quote_v1";
-        // Sama seperti Excel: tingkat kesulitan belum memengaruhi harga.
+                /* ───────── Penawaran (kalkulator internal) ───────── */
+        const Q_KEY = "artech_quote_v2";
+        // Tingkat kesulitan belum memengaruhi harga (sama seperti Excel).
         // Ubah angkanya jika ingin berpengaruh, misalnya { Mudah: 1, Sedang: 1.25, Sulit: 1.5 }
         const Q_LEVEL = { Mudah: 1, Sedang: 1, Sulit: 1 };
         const Q_DEFAULT = {
           rate: 50000,
           margin: 30,
+          discount: 0,
+          clientId: null,
+          projectName: "",
+          docId: null,
+          docNumber: "",
           modules: [
-            {
-              name: "Desain UI/UX & Wireframe",
-              level: "Mudah",
-              days: 3,
-              hpd: 4,
-            },
-            {
-              name: "Setup Database & Arsitektur",
-              level: "Sedang",
-              days: 2,
-              hpd: 6,
-            },
+            { name: "Desain UI/UX & Wireframe", level: "Mudah", days: 3, hpd: 4 },
+            { name: "Setup Database & Arsitektur", level: "Sedang", days: 2, hpd: 6 },
             { name: "Backend & API Endpoint", level: "Sulit", days: 5, hpd: 6 },
             { name: "Frontend Integration", level: "Sedang", days: 5, hpd: 5 },
             { name: "Testing & Deployment", level: "Mudah", days: 2, hpd: 4 },
@@ -2867,10 +2827,12 @@
         };
 
         const rp = (n) => "Rp " + Math.round(n).toLocaleString("id-ID");
+        const qn = (v) => Number(v) || 0;
+
         function loadQuote() {
           try {
             const s = JSON.parse(localStorage.getItem(Q_KEY));
-            if (s && Array.isArray(s.modules) && Array.isArray(s.ext)) return s;
+            if (s && Array.isArray(s.modules) && Array.isArray(s.ext)) return { ...structuredClone(Q_DEFAULT), ...s };
           } catch {
             /* abaikan */
           }
@@ -2886,55 +2848,70 @@
         let quote = loadQuote();
 
         function calcQuote() {
-          const num = (v) => Number(v) || 0;
-          const hours = quote.modules.reduce(
-            (s, m) => s + num(m.days) * num(m.hpd),
-            0,
-          );
+          const hours = quote.modules.reduce((s, m) => s + qn(m.days) * qn(m.hpd), 0);
           const labor = quote.modules.reduce(
-            (s, m) =>
-              s +
-              num(m.days) *
-                num(m.hpd) *
-                num(quote.rate) *
-                (Q_LEVEL[m.level] ?? 1),
+            (s, m) => s + qn(m.days) * qn(m.hpd) * qn(quote.rate) * (Q_LEVEL[m.level] ?? 1),
             0,
           );
-          const external = quote.ext.reduce((s, x) => s + num(x.cost), 0);
+          const external = quote.ext.reduce((s, x) => s + qn(x.cost), 0);
           const hpp = labor + external;
-          const margin = (hpp * num(quote.margin)) / 100;
-          return { hours, labor, external, hpp, margin, total: hpp + margin };
+          const margin = (hpp * qn(quote.margin)) / 100;
+          const rough = Math.round(hpp + margin);
+          const asked = Math.max(0, qn(quote.discount));
+          const discount = Math.min(asked, rough);
+          return { hours, labor, external, hpp, margin, rough, discount, final: rough - discount, over: asked > rough };
         }
 
         function renderQuoteResult() {
           const r = calcQuote();
-          const line = (a, b) =>
-            `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
+          const line = (a, b) => `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
           $("#q_result").innerHTML =
             line("Total jam kerja", `${r.hours} jam`) +
             line("Biaya tenaga kerja", rp(r.labor)) +
             line("Biaya eksternal", rp(r.external)) +
             line("Base cost (HPP)", rp(r.hpp)) +
-            line(`Margin (${Number(quote.margin) || 0}%)`, rp(r.margin)) +
-            `<div class="q-total">${rp(r.total)}</div><p class="hint">Total harga penawaran</p>`;
+            line(`Margin (${qn(quote.margin)}%)`, rp(r.margin)) +
+            line("Harga kasar (kalkulator)", rp(r.rough)) +
+            (r.discount ? line("Potongan", "− " + rp(r.discount)) : "") +
+            `<div class="q-total">${rp(r.final)}</div><p class="hint">Harga final penawaran</p>` +
+            (r.over
+              ? `<p class="form-error" style="margin-top: 8px">Potongan melebihi harga kasar, dibatasi sama dengan harga kasar.</p>`
+              : "");
+        }
+
+        function renderQuoteHead() {
+          const ed = $("#q_editing");
+          ed.hidden = !quote.docId;
+          ed.textContent = quote.docId ? `Sedang mengedit ${quote.docNumber || "penawaran tersimpan"}` : "";
+          $("#q_saveNew").hidden = !quote.docId;
+        }
+
+        function fillQuoteClients() {
+          $("#q_client").innerHTML =
+            `<option value="">— pilih klien —</option>` +
+            dstate.clients
+              .map(
+                (c) =>
+                  `<option value="${c.id}"${Number(quote.clientId) === c.id ? " selected" : ""}>${esc(c.name)}${c.business ? " — " + esc(c.business) : ""}</option>`,
+              )
+              .join("");
         }
 
         function renderQuote() {
           $("#q_rate").value = quote.rate;
           $("#q_margin").value = quote.margin;
+          $("#q_discount").value = quote.discount || 0;
+          $("#q_project").value = quote.projectName || "";
           $("#q_modules").innerHTML = quote.modules
             .map(
               (m, i) => `
             <div class="q-row">
               <input type="text" data-q="modules.${i}.name" value="${esc(m.name)}" placeholder="Nama modul">
               <select data-q="modules.${i}.level">${Object.keys(Q_LEVEL)
-                .map(
-                  (l) =>
-                    `<option${l === m.level ? " selected" : ""}>${l}</option>`,
-                )
+                .map((l) => `<option${l === m.level ? " selected" : ""}>${l}</option>`)
                 .join("")}</select>
-              <input type="number" min="0" data-q="modules.${i}.days" value="${Number(m.days) || 0}">
-              <input type="number" min="0" data-q="modules.${i}.hpd" value="${Number(m.hpd) || 0}">
+              <input type="number" min="0" data-q="modules.${i}.days" value="${qn(m.days)}">
+              <input type="number" min="0" data-q="modules.${i}.hpd" value="${qn(m.hpd)}">
               <button type="button" class="btn btn-sm btn-danger" data-qrm="modules.${i}" aria-label="Hapus modul">×</button>
             </div>`,
             )
@@ -2944,26 +2921,29 @@
               (x, i) => `
             <div class="q-row q-ext">
               <input type="text" data-q="ext.${i}.name" value="${esc(x.name)}" placeholder="Nama layanan pihak ketiga">
-              <input type="number" min="0" data-q="ext.${i}.cost" value="${Number(x.cost) || 0}">
+              <input type="number" min="0" data-q="ext.${i}.cost" value="${qn(x.cost)}">
               <button type="button" class="btn btn-sm btn-danger" data-qrm="ext.${i}" aria-label="Hapus biaya">×</button>
             </div>`,
             )
             .join("");
+          renderQuoteHead();
+          fillQuoteClients();
+          refreshClients().then(fillQuoteClients);
           renderQuoteResult();
         }
 
         async function copyQuote() {
           const r = calcQuote();
-          const scope = quote.modules
-            .filter((m) => m.name)
-            .map((m) => `- ${m.name}`);
+          const scope = quote.modules.filter((m) => m.name).map((m) => `- ${m.name}`);
           const text = [
             "PENAWARAN PROYEK — ARTech by Poi",
+            ...(quote.projectName ? [`Proyek: ${quote.projectName}`] : []),
             "",
             "Lingkup pekerjaan:",
             ...scope,
             "",
-            `Total penawaran: ${rp(r.total)}`,
+            ...(r.discount ? [`Harga: ${rp(r.rough)}`, `Potongan: ${rp(r.discount)}`] : []),
+            `Total penawaran: ${rp(r.final)}`,
           ].join("\n");
           try {
             await navigator.clipboard.writeText(text);
@@ -2973,18 +2953,75 @@
           }
         }
 
+        async function saveQuoteDoc(asNew) {
+          const clientId = Number(quote.clientId);
+          if (!clientId) return toast("Pilih klien dulu", "error");
+          if (asNew) quote.docId = null;
+          const r = calcQuote();
+          const data = {
+            projectName: (quote.projectName || "").trim(),
+            rate: qn(quote.rate),
+            margin: qn(quote.margin),
+            modules: quote.modules,
+            ext: quote.ext,
+            discount: r.discount,
+            roughTotal: r.rough,
+            finalTotal: r.final,
+          };
+          const btn = $("#q_save");
+          setLoading(btn, true, "Menyimpan...");
+          try {
+            let doc;
+            if (quote.docId) {
+              try {
+                doc = await request(`/admin/documents/${quote.docId}`, { method: "PUT", body: { clientId, data } });
+              } catch (err) {
+                if (err.status !== 404) throw err;
+                quote.docId = null; // penawaran lama sudah dihapus: simpan sebagai baru
+              }
+            }
+            if (!doc) doc = await request("/admin/documents", { method: "POST", body: { type: "quote", clientId, data } });
+            quote.docId = doc.id;
+            quote.docNumber = doc.number;
+            saveQuote();
+            renderQuoteHead();
+            toast(`Penawaran ${doc.number} tersimpan`);
+          } catch (err) {
+            toast(err.message, "error");
+          } finally {
+            setLoading(btn, false);
+          }
+        }
+
+        function openQuoteInCalculator(doc) {
+          const d = doc.data || {};
+          quote = {
+            ...structuredClone(Q_DEFAULT),
+            rate: d.rate ?? Q_DEFAULT.rate,
+            margin: d.margin ?? Q_DEFAULT.margin,
+            discount: d.discount || 0,
+            projectName: d.projectName || "",
+            modules: Array.isArray(d.modules) && d.modules.length ? d.modules : structuredClone(Q_DEFAULT.modules),
+            ext: Array.isArray(d.ext) ? d.ext : [],
+            clientId: doc.clientId,
+            docId: doc.id,
+            docNumber: doc.number,
+          };
+          saveQuote();
+          showTab("quote");
+        }
+
         $("#quoteView").addEventListener("input", (e) => {
-          const k = e.target.dataset.q;
+          const t = e.target;
+          const k = t.dataset.q;
           if (k) {
             const [grp, i, f] = k.split(".");
-            quote[grp][Number(i)][f] =
-              e.target.type === "number"
-                ? Number(e.target.value) || 0
-                : e.target.value;
-          } else if (e.target.id === "q_rate")
-            quote.rate = Number(e.target.value) || 0;
-          else if (e.target.id === "q_margin")
-            quote.margin = Number(e.target.value) || 0;
+            quote[grp][Number(i)][f] = t.type === "number" ? qn(t.value) : t.value;
+          } else if (t.id === "q_rate") quote.rate = qn(t.value);
+          else if (t.id === "q_margin") quote.margin = qn(t.value);
+          else if (t.id === "q_discount") quote.discount = qn(t.value);
+          else if (t.id === "q_project") quote.projectName = t.value;
+          else if (t.id === "q_client") quote.clientId = t.value ? Number(t.value) : null;
           else return;
           saveQuote();
           renderQuoteResult();
@@ -3008,17 +3045,20 @@
             saveQuote();
             renderQuote();
           } else if (id === "q_reset") {
-            if (confirm("Kembalikan ke contoh awal?")) {
+            if (confirm("Mulai penawaran baru? Isian saat ini dikosongkan.")) {
               quote = structuredClone(Q_DEFAULT);
               saveQuote();
               renderQuote();
             }
           } else if (id === "q_copy") copyQuote();
+          else if (id === "q_save") saveQuoteDoc(false);
+          else if (id === "q_saveNew") saveQuoteDoc(true);
         });
 
-                /* ───────── Dokumen bisnis ───────── */
-        const DOC_LABEL = { invoice: "Invoice", contract: "Kontrak", brief: "Brief" };
+        /* ───────── Dokumen bisnis ───────── */
+        const DOC_LABEL = { quote: "Penawaran", invoice: "Invoice", contract: "Kontrak", brief: "Brief" };
         const DOC_STATUS = {
+          quote: ["draft", "sent", "accepted", "rejected", "cancelled"],
           invoice: ["draft", "sent", "paid", "cancelled"],
           contract: ["draft", "sent", "signed", "cancelled"],
           brief: ["draft", "sent", "answered", "cancelled"],
@@ -3026,14 +3066,24 @@
         const STATUS_LABEL = {
           draft: "Draft",
           sent: "Terkirim",
+          accepted: "Disetujui",
+          rejected: "Ditolak",
           paid: "Lunas",
           signed: "Ditandatangani",
           answered: "Dijawab",
           cancelled: "Dibatalkan",
         };
-        const dstate = { docs: [], clients: [], filter: "all", mode: null, editId: null };
+        const dstate = { docs: [], clients: [], filter: "all", mode: null, editId: null, quoteRef: null };
         const dm = $("#docModal");
         const todayWIB = () => new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jakarta" }).format(new Date());
+
+        async function refreshClients() {
+          try {
+            dstate.clients = await request("/admin/clients");
+          } catch {
+            /* abaikan */
+          }
+        }
 
         function openDocs() {
           loadDocs();
@@ -3063,7 +3113,7 @@
                   (d) => `
               <div class="drow">
                 <div><div class="p-title">${esc(d.number)}</div><div class="p-slug">${esc(DOC_LABEL[d.type] || d.type)} · ${esc(d.issuedAt)}</div></div>
-                <div><div>${esc(d.clientName)}</div><div class="p-slug">${esc(d.clientBusiness || "")}</div></div>
+                <div><div>${esc(d.clientName)}</div><div class="p-slug">${esc(d.clientBusiness || "Perorangan")}</div></div>
                 <select class="d-status" data-dstatus="${d.id}" aria-label="Status ${esc(d.number)}">
                   ${(DOC_STATUS[d.type] || [])
                     .map((s) => `<option value="${s}"${s === d.status ? " selected" : ""}>${STATUS_LABEL[s]}</option>`)
@@ -3094,6 +3144,7 @@
           document.body.style.overflow = "";
           dstate.mode = null;
           dstate.editId = null;
+          dstate.quoteRef = null;
         }
 
         /* invoice */
@@ -3107,18 +3158,22 @@
             .join("");
           return `
             <label class="field"><span>Klien *</span><select id="i_client">${clientOpts}</select></label>
+            <label class="field"><span>Isi dari penawaran <i class="hint">— harga mengikuti penawaran klien ini</i></span><select id="i_quote"><option value="">— tidak, isi manual —</option></select></label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <label class="field"><span>Tanggal terbit</span><input type="date" id="i_issued" value="${esc(doc ? doc.issuedAt : todayWIB())}"></label>
               <label class="field"><span>Jatuh tempo</span><input type="date" id="i_due" value="${esc(d.dueDate || "")}"></label>
             </div>
             <label class="field"><span>Nama proyek / paket</span><input type="text" id="i_project" maxlength="200" value="${esc(d.projectName || "")}"></label>
             <div class="field">
-              <span>Rincian tagihan</span>
+              <span>Rincian tagihan <i class="hint">— apa saja yang ditagihkan</i></span>
               <div class="q-row i-row q-head"><span>Deskripsi</span><span>Jumlah</span><span>Harga satuan (Rp)</span><span></span></div>
               <div id="i_items"></div>
               <button class="btn btn-sm" type="button" id="i_add" style="align-self:flex-start">+ Tambah baris</button>
             </div>
-            <label class="field"><span>Uang muka (DP) <i class="hint">— persen dari total, opsional</i></span><input type="number" id="i_dp" min="0" max="100" value="${Number(d.dpPercent) || 0}"></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <label class="field"><span>Potongan (Rp)</span><input type="number" id="i_discount" min="0" value="${qn(d.discount)}"></label>
+              <label class="field"><span>Uang muka (DP) % <i class="hint">— dari total akhir</i></span><input type="number" id="i_dp" min="0" max="100" value="${qn(d.dpPercent)}"></label>
+            </div>
             <label class="field"><span>Catatan</span><textarea id="i_notes" style="min-height:80px">${esc(d.notes || "")}</textarea></label>
             <div id="i_total" class="i-total"></div>`;
         }
@@ -3129,8 +3184,8 @@
           row.className = "q-row i-row i-line";
           row.innerHTML = `
             <input type="text" class="i-desc" maxlength="200" placeholder="Deskripsi" value="${esc(d.description)}">
-            <input type="number" class="i-qty" min="0" value="${Number(d.qty) || 0}">
-            <input type="number" class="i-price" min="0" value="${Number(d.price) || 0}">
+            <input type="number" class="i-qty" min="0" value="${qn(d.qty)}">
+            <input type="number" class="i-price" min="0" value="${qn(d.price)}">
             <button type="button" class="btn btn-sm btn-danger i-rm" aria-label="Hapus baris">×</button>`;
           $("#i_items").appendChild(row);
         }
@@ -3138,22 +3193,68 @@
         function invoiceItems() {
           return [...document.querySelectorAll("#i_items .i-line")].map((r) => ({
             description: r.querySelector(".i-desc").value.trim(),
-            qty: Number(r.querySelector(".i-qty").value) || 0,
-            price: Number(r.querySelector(".i-price").value) || 0,
+            qty: qn(r.querySelector(".i-qty").value),
+            price: qn(r.querySelector(".i-price").value),
           }));
+        }
+
+        function invoiceNumbers() {
+          const sub = invoiceItems().reduce((s, i) => s + i.qty * i.price, 0);
+          const discount = Math.min(Math.max(qn($("#i_discount").value), 0), sub);
+          const total = sub - discount;
+          const dp = Math.min(100, Math.max(0, qn($("#i_dp").value)));
+          const dpAmt = Math.round((total * dp) / 100);
+          return { sub, discount, total, dp, dpAmt };
         }
 
         function renderInvoiceTotal() {
           const box = $("#i_total");
           if (!box) return;
-          const sub = invoiceItems().reduce((s, i) => s + i.qty * i.price, 0);
-          const dp = Math.min(100, Math.max(0, Number($("#i_dp").value) || 0));
-          const dpAmt = Math.round((sub * dp) / 100);
+          const n = invoiceNumbers();
           const line = (a, b) => `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
           box.innerHTML =
-            line("Subtotal", rp(sub)) +
-            (dp ? line(`Uang muka (${dp}%)`, rp(dpAmt)) + line("Sisa pembayaran", rp(sub - dpAmt)) : "") +
-            `<div class="q-total">${rp(sub)}</div><p class="hint">Total tagihan</p>`;
+            line("Subtotal", rp(n.sub)) +
+            (n.discount ? line("Potongan", "− " + rp(n.discount)) : "") +
+            (n.dp ? line(`Uang muka (${n.dp}%)`, rp(n.dpAmt)) + line("Sisa pembayaran", rp(n.total - n.dpAmt)) : "") +
+            `<div class="q-total">${rp(n.total)}</div><p class="hint">Total tagihan</p>`;
+        }
+
+        async function loadQuoteOptions() {
+          const cid = Number($("#i_client") && $("#i_client").value);
+          if (!cid) return;
+          try {
+            const quotes = await request(`/admin/documents?type=quote&clientId=${cid}`);
+            const sel = $("#i_quote");
+            if (!sel) return; // jendela sudah ditutup
+            const usable = quotes.filter((q) => q.status !== "cancelled" && q.status !== "rejected");
+            sel.innerHTML =
+              `<option value="">${usable.length ? "— pilih penawaran —" : "— klien ini belum punya penawaran —"}</option>` +
+              usable
+                .map((q) => `<option value="${q.id}">${esc(q.number)} · ${esc(q.issuedAt)} · ${STATUS_LABEL[q.status]}</option>`)
+                .join("");
+          } catch {
+            /* abaikan */
+          }
+        }
+
+        async function applyQuote(id) {
+          try {
+            const q = await request(`/admin/documents/${id}`);
+            const d = q.data || {};
+            if (d.projectName) $("#i_project").value = d.projectName;
+            $("#i_items").innerHTML = "";
+            addInvoiceRow({
+              description: d.projectName || `Pekerjaan sesuai penawaran ${q.number}`,
+              qty: 1,
+              price: d.roughTotal ?? d.finalTotal ?? 0,
+            });
+            $("#i_discount").value = d.discount || 0;
+            dstate.quoteRef = { id: q.id, number: q.number };
+            renderInvoiceTotal();
+            toast(`Harga diisi dari ${q.number}`);
+          } catch (err) {
+            toast(err.message, "error");
+          }
         }
 
         function openInvoiceForm(doc) {
@@ -3163,10 +3264,12 @@
           }
           dstate.mode = "invoice";
           dstate.editId = doc ? doc.id : null;
+          dstate.quoteRef = doc && doc.data.quoteId ? { id: doc.data.quoteId, number: doc.data.quoteNumber } : null;
           openDocModal(doc ? `Edit ${doc.number}` : "Invoice baru", invoiceFormHTML(doc));
           const items = doc && doc.data.items && doc.data.items.length ? doc.data.items : [null];
           items.forEach((it) => addInvoiceRow(it));
           renderInvoiceTotal();
+          loadQuoteOptions();
         }
 
         async function saveInvoice() {
@@ -3174,12 +3277,16 @@
           if (!clientId) throw new Error("Pilih klien dulu");
           const items = invoiceItems().filter((i) => i.description);
           if (!items.length) throw new Error("Isi minimal satu baris rincian tagihan");
+          const n = invoiceNumbers();
           const data = {
             projectName: $("#i_project").value.trim(),
             dueDate: $("#i_due").value,
             items,
-            dpPercent: Math.min(100, Math.max(0, Number($("#i_dp").value) || 0)),
+            discount: n.discount,
+            dpPercent: n.dp,
             notes: $("#i_notes").value.trim(),
+            quoteId: dstate.quoteRef ? dstate.quoteRef.id : null,
+            quoteNumber: dstate.quoteRef ? dstate.quoteRef.number : "",
           };
           const issuedAt = $("#i_issued").value || undefined;
           if (dstate.editId)
@@ -3243,6 +3350,10 @@
         dm.addEventListener("input", () => {
           if (dstate.mode === "invoice") renderInvoiceTotal();
         });
+        dm.addEventListener("change", (e) => {
+          if (e.target.id === "i_client") loadQuoteOptions();
+          else if (e.target.id === "i_quote" && e.target.value) applyQuote(Number(e.target.value));
+        });
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && !dm.hidden) closeDocModal();
         });
@@ -3273,6 +3384,7 @@
           }
           if (e.target.closest("#d_retry")) return loadDocs();
           if (e.target.closest("#d_settings")) return openProfileForm();
+          if (e.target.closest("#d_newQuote")) return showTab("quote");
           if (e.target.closest("#d_newInvoice") || e.target.closest("[data-dnew]")) return openInvoiceForm();
 
           const ed = e.target.closest("[data-dedit]");
@@ -3280,6 +3392,7 @@
             try {
               const doc = await request(`/admin/documents/${ed.dataset.dedit}`);
               if (doc.type === "invoice") openInvoiceForm(doc);
+              else if (doc.type === "quote") openQuoteInCalculator(doc);
               else toast("Editor kontrak dan brief menyusul di langkah berikutnya", "error");
             } catch (err) {
               toast(err.message, "error");
