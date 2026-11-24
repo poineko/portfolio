@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Dokumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --ink: #1b1d22; --muted: #6a707c; --line: #e3e6eb; --accent: #2b5fb3; --soft: #f3f6fb; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #d9dce2; color: var(--ink); font-size: 13px; line-height: 1.55;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  a { color: inherit; }
+
+  .toolbar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 14px; padding: 12px 20px; background: #14161a; color: #fff; font-size: 13px; }
+  .toolbar a { text-decoration: none; color: #b9c2d0; }
+  .toolbar .tip { margin-left: auto; color: #8d96a5; font-size: 12px; }
+  .toolbar button { background: #7eb3ff; color: #000; border: 0; border-radius: 8px; padding: 9px 18px; font: inherit; font-weight: 700; cursor: pointer; }
+  .toolbar button:disabled { opacity: 0.4; cursor: default; }
+
+  #root { display: flex; flex-direction: column; align-items: center; padding: 24px 0 48px; }
+  .msg { background: #fff; border-radius: 12px; padding: 28px 32px; max-width: 460px; text-align: center; }
+  .msg a { color: var(--accent); font-weight: 600; }
+
+  .sheet { position: relative; width: 210mm; min-height: 297mm; background: #fff; padding: 16mm 17mm 14mm; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18); }
+
+  .top { display: flex; justify-content: space-between; gap: 24px; padding-bottom: 18px; border-bottom: 2px solid var(--ink); }
+  .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+  .owner { font-weight: 600; margin-top: 2px; }
+  .contact { margin-top: 6px; color: var(--muted); font-size: 12px; }
+  .meta { text-align: right; }
+  .doc-title { font-size: 24px; font-weight: 800; letter-spacing: 0.06em; color: var(--accent); }
+  .kv { margin: 8px 0 0 auto; border-collapse: collapse; }
+  .kv td { padding: 1px 0 1px 14px; font-size: 12px; }
+  .kv td:first-child { color: var(--muted); }
+  .kv td:last-child { font-weight: 600; text-align: right; }
+
+  .lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .to { margin: 22px 0 14px; }
+  .to .lbl { margin-bottom: 4px; }
+  .strong { font-weight: 700; }
+  .muted { color: var(--muted); }
+  .project { margin-bottom: 12px; padding: 9px 12px; background: var(--soft); border-radius: 6px; }
+  .project .lbl { margin-right: 8px; }
+
+  table.items { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .items th { text-align: left; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 8px; border-bottom: 1px solid var(--ink); }
+  .items td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .items tr { break-inside: avoid; }
+  .c { text-align: center; width: 34px; }
+  .r { text-align: right; white-space: nowrap; }
+  .items th.r { text-align: right; }
+  .items th.c { text-align: center; }
+
+  table.totals { margin: 14px 0 0 auto; width: 300px; border-collapse: collapse; }
+  .totals td { padding: 5px 8px; }
+  .totals td:last-child { text-align: right; white-space: nowrap; font-weight: 600; }
+  .totals .grand td { border-top: 1px solid var(--ink); font-size: 15px; font-weight: 800; padding-top: 9px; }
+
+  .words { margin-top: 12px; }
+  .words .lbl { margin-right: 6px; }
+  .box { margin-top: 16px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; break-inside: avoid; }
+  .box .lbl { margin-bottom: 4px; }
+  ol.scope { margin: 6px 0 0 18px; }
+  ol.scope li { padding: 2px 0; }
+
+  .sign { margin: 28px 0 0 auto; width: 220px; text-align: center; break-inside: avoid; }
+  .sign-space { height: 62px; }
+  .foot { margin-top: 26px; padding-top: 10px; border-top: 1px solid var(--line); text-align: center; font-size: 11px; color: var(--muted); }
+
+  .stamp { position: absolute; top: 46mm; right: 17mm; transform: rotate(-12deg); border: 3px solid; padding: 4px 16px; font-size: 20px; font-weight: 800; letter-spacing: 0.12em; opacity: 0.8; border-radius: 6px; }
+  .stamp.ok { color: #1a7f4b; }
+  .stamp.void { color: #b42318; }
+
+  @media screen and (max-width: 800px) {
+    .sheet { width: 100%; min-height: auto; padding: 22px 18px; }
+    .toolbar .tip { display: none; }
+    .top { flex-direction: column; }
+    .meta { text-align: left; }
+    .kv { margin-left: 0; }
+  }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    #root { padding: 0; }
+    .sheet { margin: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <a href="admin.html">← Kembali ke admin</a>
+  <span class="tip">Di jendela cetak pilih "Simpan sebagai PDF", ukuran A4. Matikan "Header dan footer" bila muncul.</span>
+  <button id="printBtn" type="button" disabled>Cetak / Simpan PDF</button>
+</div>
+<main id="root"><div class="msg">Memuat dokumen…</div></main>
+
+<script src="js/config.js"></script>
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const nl = (s) => esc(s).replace(/\n/g, "<br>");
+  const API = String((window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL) || "").replace(/\/$/, "");
+  const TOKEN = localStorage.getItem("artech_admin_token");
+  const num = (v) => Number(v) || 0;
+  const rp = (n) => "Rp " + Math.round(num(n)).toLocaleString("id-ID");
+  const tgl = (iso) => {
+    if (!iso) return "-";
+    const d = new Date(iso + "T00:00:00");
+    return isNaN(d) ? esc(iso) : d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  };
+
+  /* Terbilang rupiah */
+  const SATUAN = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+  function terbilang(n) {
+    n = Math.floor(Math.abs(n));
+    if (n < 12) return SATUAN[n];
+    if (n < 20) return terbilang(n - 10) + " belas";
+    if (n < 100) return terbilang(Math.floor(n / 10)) + " puluh" + (n % 10 ? " " + terbilang(n % 10) : "");
+    if (n < 200) return "seratus" + (n % 100 ? " " + terbilang(n - 100) : "");
+    if (n < 1000) return terbilang(Math.floor(n / 100)) + " ratus" + (n % 100 ? " " + terbilang(n % 100) : "");
+    if (n < 2000) return "seribu" + (n % 1000 ? " " + terbilang(n - 1000) : "");
+    if (n < 1e6) return terbilang(Math.floor(n / 1000)) + " ribu" + (n % 1000 ? " " + terbilang(n % 1000) : "");
+    if (n < 1e9) return terbilang(Math.floor(n / 1e6)) + " juta" + (n % 1e6 ? " " + terbilang(n % 1e6) : "");
+    if (n < 1e12) return terbilang(Math.floor(n / 1e9)) + " miliar" + (n % 1e9 ? " " + terbilang(n % 1e9) : "");
+    return String(n);
+  }
+  const kata = (n) => {
+    const w = Math.round(n) === 0 ? "nol" : terbilang(n);
+    return w.charAt(0).toUpperCase() + w.slice(1) + " rupiah";
+  };
+
+  const STAMP = { paid: ["LUNAS", "ok"], accepted: ["DISETUJUI", "ok"], cancelled: ["DIBATALKAN", "void"], rejected: ["DITOLAK", "void"] };
+  const stamp = (st) => (STAMP[st] ? `<div class="stamp ${STAMP[st][1]}">${STAMP[st][0]}</div>` : "");
+
+  function top(p, label, rows) {
+    const name = p.businessName || "ARTech by Poi";
+    const contact = [p.address, [p.phone, p.email].filter(Boolean).join(" · "), p.website].filter(Boolean).map(esc).join("<br>");
+    return `
+      <header class="top">
+        <div>
+          <div class="brand">${esc(name)}</div>
+          ${p.ownerName ? `<div class="owner">${esc(p.ownerName)}</div>` : ""}
+          <div class="contact">${contact}</div>
+        </div>
+        <div class="meta">
+          <div class="doc-title">${label}</div>
+          <table class="kv">${rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("")}</table>
+        </div>
+      </header>`;
+  }
+
+  function clientBlock(c, label) {
+    const contact = [c.phone, c.email].filter(Boolean).map(esc).join(" · ");
+    return `
+      <section class="to">
+        <div class="lbl">${label}</div>
+        <div class="strong">${esc(c.business || c.name)}</div>
+        ${c.business ? `<div>u.p. ${esc(c.name)}</div>` : ""}
+        ${c.address ? `<div>${esc(c.address)}</div>` : ""}
+        ${contact ? `<div class="muted">${contact}</div>` : ""}
+      </section>`;
+  }
+
+  function signature(p, doc) {
+    const name = p.businessName || "ARTech by Poi";
+    return `
+      <section class="sign">
+        <div>${p.city ? esc(p.city) + ", " : ""}${tgl(doc.issuedAt)}</div>
+        <div class="sign-space"></div>
+        <div class="strong">${esc(p.ownerName || name)}</div>
+        ${p.ownerName ? `<div class="muted">${esc(name)}</div>` : ""}
+      </section>`;
+  }
+
+  const footer = (p) => (p.footerNote ? `<footer class="foot">${nl(p.footerNote)}</footer>` : "");
+
+  function invoiceHTML(doc, p) {
+    const d = doc.data || {};
+    const items = Array.isArray(d.items) ? d.items : [];
+    const sub = items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
+    const discount = Math.min(Math.max(num(d.discount), 0), sub);
+    const total = sub - discount;
+    const dp = Math.min(100, Math.max(0, num(d.dpPercent)));
+    const dpAmt = Math.round((total * dp) / 100);
+    const rows = items
+      .map(
+        (i, n) => `<tr>
+          <td class="c">${n + 1}</td><td>${esc(i.description)}</td>
+          <td class="r">${esc(num(i.qty))}</td><td class="r">${rp(i.price)}</td><td class="r">${rp(num(i.qty) * num(i.price))}</td>
+        </tr>`,
+      )
+      .join("");
+    return `
+      <article class="sheet">
+        ${stamp(doc.status)}
+        ${top(p, "INVOICE", [
+          ["Nomor", esc(doc.number)],
+          ["Tanggal", tgl(doc.issuedAt)],
+          ["Jatuh tempo", tgl(d.dueDate)],
+          ...(d.quoteNumber ? [["Ref. penawaran", esc(d.quoteNumber)]] : []),
+        ])}
+        ${clientBlock(doc.client, "Ditagihkan kepada")}
+        ${d.projectName ? `<div class="project"><span class="lbl">Proyek</span>${esc(d.projectName)}</div>` : ""}
+        <table class="items">
+          <thead><tr><th class="c">No</th><th>Deskripsi</th><th class="r">Jml</th><th class="r">Harga satuan</th><th class="r">Jumlah</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <table class="totals">
+          <tr><td>Subtotal</td><td>${rp(sub)}</td></tr>
+          ${discount ? `<tr><td>Potongan</td><td>− ${rp(discount)}</td></tr>` : ""}
+          <tr class="grand"><td>Total tagihan</td><td>${rp(total)}</td></tr>
+          ${dp ? `<tr><td>Uang muka (DP) ${dp}%</td><td>${rp(dpAmt)}</td></tr><tr><td>Sisa pembayaran</td><td>${rp(total - dpAmt)}</td></tr>` : ""}
+        </table>
+        <p class="words"><span class="lbl">Terbilang</span>${esc(kata(total))}</p>
+        ${p.paymentInfo ? `<section class="box"><div class="lbl">Pembayaran</div><div>${nl(p.paymentInfo)}</div></section>` : ""}
+        ${d.notes ? `<section class="box"><div class="lbl">Catatan</div><div>${nl(d.notes)}</div></section>` : ""}
+        ${signature(p, doc)}
+        ${footer(p)}
+      </article>`;
+  }
+
+  function quoteHTML(doc, p) {
+    const d = doc.data || {};
+    const modules = (Array.isArray(d.modules) ? d.modules : []).filter((m) => m && m.name);
+    const included = (Array.isArray(d.ext) ? d.ext : []).filter((x) => x && x.name && num(x.cost) > 0);
+    const rough = num(d.roughTotal);
+    const discount = num(d.discount);
+    const final = d.finalTotal != null ? num(d.finalTotal) : rough - discount;
+    return `
+      <article class="sheet">
+        ${stamp(doc.status)}
+        ${top(p, "PENAWARAN", [["Nomor", esc(doc.number)], ["Tanggal", tgl(doc.issuedAt)]])}
+        ${clientBlock(doc.client, "Ditujukan kepada")}
+        ${d.projectName ? `<div class="project"><span class="lbl">Proyek</span>${esc(d.projectName)}</div>` : ""}
+        <section class="box">
+          <div class="lbl">Lingkup pekerjaan</div>
+          <ol class="scope">${modules.map((m) => `<li>${esc(m.name)}</li>`).join("")}</ol>
+        </section>
+        ${
+          included.length
+            ? `<section class="box"><div class="lbl">Sudah termasuk biaya</div><div>${included.map((x) => esc(x.name)).join(", ")}</div></section>`
+            : ""
+        }
+        <table class="totals">
+          ${discount ? `<tr><td>Harga</td><td>${rp(rough)}</td></tr><tr><td>Potongan</td><td>− ${rp(discount)}</td></tr>` : ""}
+          <tr class="grand"><td>Total penawaran</td><td>${rp(final)}</td></tr>
+        </table>
+        <p class="words"><span class="lbl">Terbilang</span>${esc(kata(final))}</p>
+        ${signature(p, doc)}
+        ${footer(p)}
+      </article>`;
+  }
+
+  const showMessage = (html) => {
+    $("#root").innerHTML = `<div class="msg">${html}</div>`;
+  };
+
+  async function api(path) {
+    const res = await fetch(API + path, { headers: { Authorization: "Bearer " + TOKEN } });
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {
+      /* abaikan */
+    }
+    if (!res.ok) {
+      const e = new Error((data && data.error) || `Permintaan gagal (${res.status})`);
+      e.status = res.status;
+      throw e;
+    }
+    return data;
+  }
+
+  async function main() {
+    const id = Number(new URLSearchParams(location.search).get("id"));
+    if (!id) return showMessage("Dokumen tidak ditentukan. Buka dari tab Dokumen di admin.");
+    if (!TOKEN) return showMessage('Silakan login dulu di <a href="admin.html">admin</a>, lalu buka dokumen lagi.');
+    try {
+      const [doc, settings] = await Promise.all([api(`/admin/documents/${id}`), api("/admin/settings")]);
+      const p = settings.docProfile || {};
+      let html;
+      if (doc.type === "invoice") html = invoiceHTML(doc, p);
+      else if (doc.type === "quote") html = quoteHTML(doc, p);
+      else return showMessage("Cetak untuk kontrak dan brief menyusul.");
+      document.title = `${doc.number} - ${doc.client.name}`;
+      $("#root").innerHTML = html;
+      $("#printBtn").disabled = false;
+    } catch (err) {
+      if (err.status === 401) showMessage('Sesi login berakhir. <a href="admin.html">Login lagi di admin</a>.');
+      else showMessage(esc(err.message));
+    }
+  }
+
+  $("#printBtn").addEventListener("click", () => window.print());
+  main();
+})();
+</script>
+</body>
+</html>

@@ -1029,7 +1029,7 @@
       }
       .drow {
         display: grid;
-        grid-template-columns: 1.2fr 1.2fr 150px 130px;
+        grid-template-columns: 1.2fr 1.2fr 150px 200px;
         gap: 16px;
         align-items: center;
         padding: 14px 18px;
@@ -1336,48 +1336,93 @@
           <div class="list" id="contentList"></div>
         </div>
 
-                <!-- Penawaran (kalkulator internal) -->
+        <!-- Penawaran (kalkulator internal) -->
         <div id="quoteView" hidden>
           <div class="page-head">
             <h1>Kalkulator <em>penawaran</em></h1>
             <div class="filters">
-              <button class="btn btn-sm" id="q_reset" type="button">Reset</button>
-              <button class="btn btn-sm" id="q_copy" type="button">Salin teks</button>
-              <button class="btn btn-sm" id="q_saveNew" type="button" hidden>Simpan sebagai baru</button>
-              <button class="btn btn-sm btn-primary" id="q_save" type="button">Simpan penawaran</button>
+              <button class="btn btn-sm" id="q_reset" type="button">
+                Reset
+              </button>
+              <button class="btn btn-sm" id="q_copy" type="button">
+                Salin teks
+              </button>
+              <button class="btn btn-sm" id="q_saveNew" type="button" hidden>
+                Simpan sebagai baru
+              </button>
+              <button class="btn btn-sm btn-primary" id="q_save" type="button">
+                Simpan penawaran
+              </button>
             </div>
           </div>
           <div class="editor-grid">
             <div>
               <div class="card">
                 <h3>Untuk siapa</h3>
-                <p class="hint" id="q_editing" style="margin-bottom: 12px" hidden></p>
-                <label class="field"><span>Klien</span><select id="q_client"></select></label>
-                <label class="field" style="margin-bottom: 0"><span>Nama proyek / paket</span><input type="text" id="q_project" maxlength="200"></label>
+                <p
+                  class="hint"
+                  id="q_editing"
+                  style="margin-bottom: 12px"
+                  hidden
+                ></p>
+                <label class="field"
+                  ><span>Klien</span
+                  ><select id="q_client"></select
+                ></label>
+                <label class="field" style="margin-bottom: 0"
+                  ><span>Nama proyek / paket</span
+                  ><input type="text" id="q_project" maxlength="200"
+                /></label>
               </div>
               <div class="card">
                 <h3>Rincian modul</h3>
                 <div class="q-row q-head">
-                  <span>Modul / fitur</span><span>Kesulitan</span><span>Hari</span><span>Jam/hari</span><span></span>
+                  <span>Modul / fitur</span><span>Kesulitan</span
+                  ><span>Hari</span><span>Jam/hari</span><span></span>
                 </div>
                 <div id="q_modules"></div>
-                <button class="btn btn-sm" id="q_addModule" type="button" style="margin-top: 10px">+ Tambah modul</button>
+                <button
+                  class="btn btn-sm"
+                  id="q_addModule"
+                  type="button"
+                  style="margin-top: 10px"
+                >
+                  + Tambah modul
+                </button>
               </div>
               <div class="card">
                 <h3>Biaya eksternal</h3>
                 <div id="q_ext"></div>
-                <button class="btn btn-sm" id="q_addExt" type="button" style="margin-top: 10px">+ Tambah biaya</button>
+                <button
+                  class="btn btn-sm"
+                  id="q_addExt"
+                  type="button"
+                  style="margin-top: 10px"
+                >
+                  + Tambah biaya
+                </button>
               </div>
             </div>
             <aside>
               <div class="card">
                 <h3>Tarif</h3>
-                <label class="field"><span>Tarif per jam (Rp)</span><input type="number" id="q_rate" min="0"></label>
-                <label class="field" style="margin-bottom: 0"><span>Margin / kontingensi (%)</span><input type="number" id="q_margin" min="0"></label>
+                <label class="field"
+                  ><span>Tarif per jam (Rp)</span
+                  ><input type="number" id="q_rate" min="0"
+                /></label>
+                <label class="field" style="margin-bottom: 0"
+                  ><span>Margin / kontingensi (%)</span
+                  ><input type="number" id="q_margin" min="0"
+                /></label>
               </div>
               <div class="card">
                 <h3>Potongan harga</h3>
-                <label class="field" style="margin-bottom: 0"><span>Potongan (Rp) <i class="hint">— menyesuaikan harga fix</i></span><input type="number" id="q_discount" min="0"></label>
+                <label class="field" style="margin-bottom: 0"
+                  ><span
+                    >Potongan (Rp)
+                    <i class="hint">— menyesuaikan harga fix</i></span
+                  ><input type="number" id="q_discount" min="0"
+                /></label>
               </div>
               <div class="card">
                 <h3>Hasil</h3>
@@ -1392,17 +1437,45 @@
           <div class="page-head">
             <h1>Dokumen <em>bisnis</em></h1>
             <div class="filters">
-              <button class="btn btn-sm" id="d_settings" type="button">Pengaturan usaha</button>
-              <button class="btn btn-sm" id="d_newQuote" type="button">+ Penawaran</button>
-              <button class="btn btn-sm btn-primary" id="d_newInvoice" type="button">+ Invoice</button>
+              <button class="btn btn-sm" id="d_settings" type="button">
+                Pengaturan usaha
+              </button>
+              <button class="btn btn-sm" id="d_newQuote" type="button">
+                + Penawaran
+              </button>
+              <button
+                class="btn btn-sm btn-primary"
+                id="d_newInvoice"
+                type="button"
+              >
+                + Invoice
+              </button>
             </div>
           </div>
           <div class="filters" style="margin-bottom: 16px">
-            <button class="btn btn-sm" data-df="all" type="button">Semua</button>
-            <button class="btn btn-sm btn-ghost" data-df="quote" type="button">Penawaran</button>
-            <button class="btn btn-sm btn-ghost" data-df="invoice" type="button">Invoice</button>
-            <button class="btn btn-sm btn-ghost" data-df="contract" type="button">Kontrak</button>
-            <button class="btn btn-sm btn-ghost" data-df="brief" type="button">Brief</button>
+            <button class="btn btn-sm" data-df="all" type="button">
+              Semua
+            </button>
+            <button class="btn btn-sm btn-ghost" data-df="quote" type="button">
+              Penawaran
+            </button>
+            <button
+              class="btn btn-sm btn-ghost"
+              data-df="invoice"
+              type="button"
+            >
+              Invoice
+            </button>
+            <button
+              class="btn btn-sm btn-ghost"
+              data-df="contract"
+              type="button"
+            >
+              Kontrak
+            </button>
+            <button class="btn btn-sm btn-ghost" data-df="brief" type="button">
+              Brief
+            </button>
           </div>
           <div class="list" id="docList"></div>
         </div>
@@ -2576,7 +2649,12 @@
                 max: 120,
                 req: true,
               },
-              { k: "business", label: "Nama usaha (kosongkan jika perorangan)", type: "text", max: 150 },
+              {
+                k: "business",
+                label: "Nama usaha (kosongkan jika perorangan)",
+                type: "text",
+                max: 150,
+              },
               {
                 k: "phone",
                 label: "Telepon / WhatsApp",
@@ -2800,7 +2878,7 @@
           }
         });
 
-                /* ───────── Penawaran (kalkulator internal) ───────── */
+        /* ───────── Penawaran (kalkulator internal) ───────── */
         const Q_KEY = "artech_quote_v2";
         // Tingkat kesulitan belum memengaruhi harga (sama seperti Excel).
         // Ubah angkanya jika ingin berpengaruh, misalnya { Mudah: 1, Sedang: 1.25, Sulit: 1.5 }
@@ -2814,8 +2892,18 @@
           docId: null,
           docNumber: "",
           modules: [
-            { name: "Desain UI/UX & Wireframe", level: "Mudah", days: 3, hpd: 4 },
-            { name: "Setup Database & Arsitektur", level: "Sedang", days: 2, hpd: 6 },
+            {
+              name: "Desain UI/UX & Wireframe",
+              level: "Mudah",
+              days: 3,
+              hpd: 4,
+            },
+            {
+              name: "Setup Database & Arsitektur",
+              level: "Sedang",
+              days: 2,
+              hpd: 6,
+            },
             { name: "Backend & API Endpoint", level: "Sulit", days: 5, hpd: 6 },
             { name: "Frontend Integration", level: "Sedang", days: 5, hpd: 5 },
             { name: "Testing & Deployment", level: "Mudah", days: 2, hpd: 4 },
@@ -2832,7 +2920,8 @@
         function loadQuote() {
           try {
             const s = JSON.parse(localStorage.getItem(Q_KEY));
-            if (s && Array.isArray(s.modules) && Array.isArray(s.ext)) return { ...structuredClone(Q_DEFAULT), ...s };
+            if (s && Array.isArray(s.modules) && Array.isArray(s.ext))
+              return { ...structuredClone(Q_DEFAULT), ...s };
           } catch {
             /* abaikan */
           }
@@ -2848,9 +2937,14 @@
         let quote = loadQuote();
 
         function calcQuote() {
-          const hours = quote.modules.reduce((s, m) => s + qn(m.days) * qn(m.hpd), 0);
+          const hours = quote.modules.reduce(
+            (s, m) => s + qn(m.days) * qn(m.hpd),
+            0,
+          );
           const labor = quote.modules.reduce(
-            (s, m) => s + qn(m.days) * qn(m.hpd) * qn(quote.rate) * (Q_LEVEL[m.level] ?? 1),
+            (s, m) =>
+              s +
+              qn(m.days) * qn(m.hpd) * qn(quote.rate) * (Q_LEVEL[m.level] ?? 1),
             0,
           );
           const external = quote.ext.reduce((s, x) => s + qn(x.cost), 0);
@@ -2859,12 +2953,23 @@
           const rough = Math.round(hpp + margin);
           const asked = Math.max(0, qn(quote.discount));
           const discount = Math.min(asked, rough);
-          return { hours, labor, external, hpp, margin, rough, discount, final: rough - discount, over: asked > rough };
+          return {
+            hours,
+            labor,
+            external,
+            hpp,
+            margin,
+            rough,
+            discount,
+            final: rough - discount,
+            over: asked > rough,
+          };
         }
 
         function renderQuoteResult() {
           const r = calcQuote();
-          const line = (a, b) => `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
+          const line = (a, b) =>
+            `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
           $("#q_result").innerHTML =
             line("Total jam kerja", `${r.hours} jam`) +
             line("Biaya tenaga kerja", rp(r.labor)) +
@@ -2882,7 +2987,9 @@
         function renderQuoteHead() {
           const ed = $("#q_editing");
           ed.hidden = !quote.docId;
-          ed.textContent = quote.docId ? `Sedang mengedit ${quote.docNumber || "penawaran tersimpan"}` : "";
+          ed.textContent = quote.docId
+            ? `Sedang mengedit ${quote.docNumber || "penawaran tersimpan"}`
+            : "";
           $("#q_saveNew").hidden = !quote.docId;
         }
 
@@ -2908,7 +3015,10 @@
             <div class="q-row">
               <input type="text" data-q="modules.${i}.name" value="${esc(m.name)}" placeholder="Nama modul">
               <select data-q="modules.${i}.level">${Object.keys(Q_LEVEL)
-                .map((l) => `<option${l === m.level ? " selected" : ""}>${l}</option>`)
+                .map(
+                  (l) =>
+                    `<option${l === m.level ? " selected" : ""}>${l}</option>`,
+                )
                 .join("")}</select>
               <input type="number" min="0" data-q="modules.${i}.days" value="${qn(m.days)}">
               <input type="number" min="0" data-q="modules.${i}.hpd" value="${qn(m.hpd)}">
@@ -2934,7 +3044,9 @@
 
         async function copyQuote() {
           const r = calcQuote();
-          const scope = quote.modules.filter((m) => m.name).map((m) => `- ${m.name}`);
+          const scope = quote.modules
+            .filter((m) => m.name)
+            .map((m) => `- ${m.name}`);
           const text = [
             "PENAWARAN PROYEK — ARTech by Poi",
             ...(quote.projectName ? [`Proyek: ${quote.projectName}`] : []),
@@ -2942,7 +3054,9 @@
             "Lingkup pekerjaan:",
             ...scope,
             "",
-            ...(r.discount ? [`Harga: ${rp(r.rough)}`, `Potongan: ${rp(r.discount)}`] : []),
+            ...(r.discount
+              ? [`Harga: ${rp(r.rough)}`, `Potongan: ${rp(r.discount)}`]
+              : []),
             `Total penawaran: ${rp(r.final)}`,
           ].join("\n");
           try {
@@ -2974,13 +3088,20 @@
             let doc;
             if (quote.docId) {
               try {
-                doc = await request(`/admin/documents/${quote.docId}`, { method: "PUT", body: { clientId, data } });
+                doc = await request(`/admin/documents/${quote.docId}`, {
+                  method: "PUT",
+                  body: { clientId, data },
+                });
               } catch (err) {
                 if (err.status !== 404) throw err;
                 quote.docId = null; // penawaran lama sudah dihapus: simpan sebagai baru
               }
             }
-            if (!doc) doc = await request("/admin/documents", { method: "POST", body: { type: "quote", clientId, data } });
+            if (!doc)
+              doc = await request("/admin/documents", {
+                method: "POST",
+                body: { type: "quote", clientId, data },
+              });
             quote.docId = doc.id;
             quote.docNumber = doc.number;
             saveQuote();
@@ -3001,7 +3122,10 @@
             margin: d.margin ?? Q_DEFAULT.margin,
             discount: d.discount || 0,
             projectName: d.projectName || "",
-            modules: Array.isArray(d.modules) && d.modules.length ? d.modules : structuredClone(Q_DEFAULT.modules),
+            modules:
+              Array.isArray(d.modules) && d.modules.length
+                ? d.modules
+                : structuredClone(Q_DEFAULT.modules),
             ext: Array.isArray(d.ext) ? d.ext : [],
             clientId: doc.clientId,
             docId: doc.id,
@@ -3016,12 +3140,14 @@
           const k = t.dataset.q;
           if (k) {
             const [grp, i, f] = k.split(".");
-            quote[grp][Number(i)][f] = t.type === "number" ? qn(t.value) : t.value;
+            quote[grp][Number(i)][f] =
+              t.type === "number" ? qn(t.value) : t.value;
           } else if (t.id === "q_rate") quote.rate = qn(t.value);
           else if (t.id === "q_margin") quote.margin = qn(t.value);
           else if (t.id === "q_discount") quote.discount = qn(t.value);
           else if (t.id === "q_project") quote.projectName = t.value;
-          else if (t.id === "q_client") quote.clientId = t.value ? Number(t.value) : null;
+          else if (t.id === "q_client")
+            quote.clientId = t.value ? Number(t.value) : null;
           else return;
           saveQuote();
           renderQuoteResult();
@@ -3056,7 +3182,12 @@
         });
 
         /* ───────── Dokumen bisnis ───────── */
-        const DOC_LABEL = { quote: "Penawaran", invoice: "Invoice", contract: "Kontrak", brief: "Brief" };
+        const DOC_LABEL = {
+          quote: "Penawaran",
+          invoice: "Invoice",
+          contract: "Kontrak",
+          brief: "Brief",
+        };
         const DOC_STATUS = {
           quote: ["draft", "sent", "accepted", "rejected", "cancelled"],
           invoice: ["draft", "sent", "paid", "cancelled"],
@@ -3073,9 +3204,19 @@
           answered: "Dijawab",
           cancelled: "Dibatalkan",
         };
-        const dstate = { docs: [], clients: [], filter: "all", mode: null, editId: null, quoteRef: null };
+        const dstate = {
+          docs: [],
+          clients: [],
+          filter: "all",
+          mode: null,
+          editId: null,
+          quoteRef: null,
+        };
         const dm = $("#docModal");
-        const todayWIB = () => new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jakarta" }).format(new Date());
+        const todayWIB = () =>
+          new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Jakarta" }).format(
+            new Date(),
+          );
 
         async function refreshClients() {
           try {
@@ -3093,7 +3234,10 @@
           const el = $("#docList");
           el.innerHTML = `<div class="empty"><span>Memuat...</span></div>`;
           try {
-            const [docs, clients] = await Promise.all([request("/admin/documents"), request("/admin/clients")]);
+            const [docs, clients] = await Promise.all([
+              request("/admin/documents"),
+              request("/admin/clients"),
+            ]);
             dstate.docs = docs;
             dstate.clients = clients;
             renderDocs();
@@ -3105,8 +3249,13 @@
         function renderDocs() {
           document
             .querySelectorAll("[data-df]")
-            .forEach((b) => b.classList.toggle("btn-ghost", b.dataset.df !== dstate.filter));
-          const list = dstate.filter === "all" ? dstate.docs : dstate.docs.filter((d) => d.type === dstate.filter);
+            .forEach((b) =>
+              b.classList.toggle("btn-ghost", b.dataset.df !== dstate.filter),
+            );
+          const list =
+            dstate.filter === "all"
+              ? dstate.docs
+              : dstate.docs.filter((d) => d.type === dstate.filter);
           $("#docList").innerHTML = list.length
             ? list
                 .map(
@@ -3116,11 +3265,14 @@
                 <div><div>${esc(d.clientName)}</div><div class="p-slug">${esc(d.clientBusiness || "Perorangan")}</div></div>
                 <select class="d-status" data-dstatus="${d.id}" aria-label="Status ${esc(d.number)}">
                   ${(DOC_STATUS[d.type] || [])
-                    .map((s) => `<option value="${s}"${s === d.status ? " selected" : ""}>${STATUS_LABEL[s]}</option>`)
+                    .map(
+                      (s) =>
+                        `<option value="${s}"${s === d.status ? " selected" : ""}>${STATUS_LABEL[s]}</option>`,
+                    )
                     .join("")}
                 </select>
                 <div class="actions">
-                  <button class="btn btn-sm" data-dedit="${d.id}" type="button">Edit</button>
+                                    ${d.type === "invoice" || d.type === "quote" ? `<a class="btn btn-sm" href="dokumen.html?id=${d.id}" target="_blank" rel="noopener">Cetak</a>` : ""}
                   <button class="btn btn-sm btn-danger" data-ddel="${d.id}" type="button">Hapus</button>
                 </div>
               </div>`,
@@ -3191,16 +3343,21 @@
         }
 
         function invoiceItems() {
-          return [...document.querySelectorAll("#i_items .i-line")].map((r) => ({
-            description: r.querySelector(".i-desc").value.trim(),
-            qty: qn(r.querySelector(".i-qty").value),
-            price: qn(r.querySelector(".i-price").value),
-          }));
+          return [...document.querySelectorAll("#i_items .i-line")].map(
+            (r) => ({
+              description: r.querySelector(".i-desc").value.trim(),
+              qty: qn(r.querySelector(".i-qty").value),
+              price: qn(r.querySelector(".i-price").value),
+            }),
+          );
         }
 
         function invoiceNumbers() {
           const sub = invoiceItems().reduce((s, i) => s + i.qty * i.price, 0);
-          const discount = Math.min(Math.max(qn($("#i_discount").value), 0), sub);
+          const discount = Math.min(
+            Math.max(qn($("#i_discount").value), 0),
+            sub,
+          );
           const total = sub - discount;
           const dp = Math.min(100, Math.max(0, qn($("#i_dp").value)));
           const dpAmt = Math.round((total * dp) / 100);
@@ -3211,11 +3368,15 @@
           const box = $("#i_total");
           if (!box) return;
           const n = invoiceNumbers();
-          const line = (a, b) => `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
+          const line = (a, b) =>
+            `<div class="q-line"><span>${a}</span><strong>${b}</strong></div>`;
           box.innerHTML =
             line("Subtotal", rp(n.sub)) +
             (n.discount ? line("Potongan", "− " + rp(n.discount)) : "") +
-            (n.dp ? line(`Uang muka (${n.dp}%)`, rp(n.dpAmt)) + line("Sisa pembayaran", rp(n.total - n.dpAmt)) : "") +
+            (n.dp
+              ? line(`Uang muka (${n.dp}%)`, rp(n.dpAmt)) +
+                line("Sisa pembayaran", rp(n.total - n.dpAmt))
+              : "") +
             `<div class="q-total">${rp(n.total)}</div><p class="hint">Total tagihan</p>`;
         }
 
@@ -3223,14 +3384,21 @@
           const cid = Number($("#i_client") && $("#i_client").value);
           if (!cid) return;
           try {
-            const quotes = await request(`/admin/documents?type=quote&clientId=${cid}`);
+            const quotes = await request(
+              `/admin/documents?type=quote&clientId=${cid}`,
+            );
             const sel = $("#i_quote");
             if (!sel) return; // jendela sudah ditutup
-            const usable = quotes.filter((q) => q.status !== "cancelled" && q.status !== "rejected");
+            const usable = quotes.filter(
+              (q) => q.status !== "cancelled" && q.status !== "rejected",
+            );
             sel.innerHTML =
               `<option value="">${usable.length ? "— pilih penawaran —" : "— klien ini belum punya penawaran —"}</option>` +
               usable
-                .map((q) => `<option value="${q.id}">${esc(q.number)} · ${esc(q.issuedAt)} · ${STATUS_LABEL[q.status]}</option>`)
+                .map(
+                  (q) =>
+                    `<option value="${q.id}">${esc(q.number)} · ${esc(q.issuedAt)} · ${STATUS_LABEL[q.status]}</option>`,
+                )
                 .join("");
           } catch {
             /* abaikan */
@@ -3244,7 +3412,8 @@
             if (d.projectName) $("#i_project").value = d.projectName;
             $("#i_items").innerHTML = "";
             addInvoiceRow({
-              description: d.projectName || `Pekerjaan sesuai penawaran ${q.number}`,
+              description:
+                d.projectName || `Pekerjaan sesuai penawaran ${q.number}`,
               qty: 1,
               price: d.roughTotal ?? d.finalTotal ?? 0,
             });
@@ -3264,9 +3433,18 @@
           }
           dstate.mode = "invoice";
           dstate.editId = doc ? doc.id : null;
-          dstate.quoteRef = doc && doc.data.quoteId ? { id: doc.data.quoteId, number: doc.data.quoteNumber } : null;
-          openDocModal(doc ? `Edit ${doc.number}` : "Invoice baru", invoiceFormHTML(doc));
-          const items = doc && doc.data.items && doc.data.items.length ? doc.data.items : [null];
+          dstate.quoteRef =
+            doc && doc.data.quoteId
+              ? { id: doc.data.quoteId, number: doc.data.quoteNumber }
+              : null;
+          openDocModal(
+            doc ? `Edit ${doc.number}` : "Invoice baru",
+            invoiceFormHTML(doc),
+          );
+          const items =
+            doc && doc.data.items && doc.data.items.length
+              ? doc.data.items
+              : [null];
           items.forEach((it) => addInvoiceRow(it));
           renderInvoiceTotal();
           loadQuoteOptions();
@@ -3276,7 +3454,8 @@
           const clientId = Number($("#i_client").value);
           if (!clientId) throw new Error("Pilih klien dulu");
           const items = invoiceItems().filter((i) => i.description);
-          if (!items.length) throw new Error("Isi minimal satu baris rincian tagihan");
+          if (!items.length)
+            throw new Error("Isi minimal satu baris rincian tagihan");
           const n = invoiceNumbers();
           const data = {
             projectName: $("#i_project").value.trim(),
@@ -3290,8 +3469,15 @@
           };
           const issuedAt = $("#i_issued").value || undefined;
           if (dstate.editId)
-            await request(`/admin/documents/${dstate.editId}`, { method: "PUT", body: { clientId, issuedAt, data } });
-          else await request("/admin/documents", { method: "POST", body: { type: "invoice", clientId, issuedAt, data } });
+            await request(`/admin/documents/${dstate.editId}`, {
+              method: "PUT",
+              body: { clientId, issuedAt, data },
+            });
+          else
+            await request("/admin/documents", {
+              method: "POST",
+              body: { type: "invoice", clientId, issuedAt, data },
+            });
         }
 
         /* pengaturan usaha */
@@ -3327,7 +3513,9 @@
 
         async function saveProfile() {
           const body = {};
-          PROFILE_FIELDS.forEach(([k]) => (body[k] = $("#p_" + k).value.trim()));
+          PROFILE_FIELDS.forEach(
+            ([k]) => (body[k] = $("#p_" + k).value.trim()),
+          );
           await request("/admin/settings/docProfile", { method: "PUT", body });
         }
 
@@ -3352,7 +3540,8 @@
         });
         dm.addEventListener("change", (e) => {
           if (e.target.id === "i_client") loadQuoteOptions();
-          else if (e.target.id === "i_quote" && e.target.value) applyQuote(Number(e.target.value));
+          else if (e.target.id === "i_quote" && e.target.value)
+            applyQuote(Number(e.target.value));
         });
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && !dm.hidden) closeDocModal();
@@ -3385,7 +3574,11 @@
           if (e.target.closest("#d_retry")) return loadDocs();
           if (e.target.closest("#d_settings")) return openProfileForm();
           if (e.target.closest("#d_newQuote")) return showTab("quote");
-          if (e.target.closest("#d_newInvoice") || e.target.closest("[data-dnew]")) return openInvoiceForm();
+          if (
+            e.target.closest("#d_newInvoice") ||
+            e.target.closest("[data-dnew]")
+          )
+            return openInvoiceForm();
 
           const ed = e.target.closest("[data-dedit]");
           if (ed) {
@@ -3393,7 +3586,11 @@
               const doc = await request(`/admin/documents/${ed.dataset.dedit}`);
               if (doc.type === "invoice") openInvoiceForm(doc);
               else if (doc.type === "quote") openQuoteInCalculator(doc);
-              else toast("Editor kontrak dan brief menyusul di langkah berikutnya", "error");
+              else
+                toast(
+                  "Editor kontrak dan brief menyusul di langkah berikutnya",
+                  "error",
+                );
             } catch (err) {
               toast(err.message, "error");
             }
@@ -3405,7 +3602,9 @@
             if (!confirm("Hapus dokumen ini?")) return;
             del.disabled = true;
             try {
-              await request(`/admin/documents/${del.dataset.ddel}`, { method: "DELETE" });
+              await request(`/admin/documents/${del.dataset.ddel}`, {
+                method: "DELETE",
+              });
               toast("Dokumen dihapus");
               loadDocs();
             } catch (err) {
@@ -3422,7 +3621,10 @@
           const doc = dstate.docs.find((d) => d.id === id);
           sel.disabled = true;
           try {
-            await request(`/admin/documents/${id}`, { method: "PUT", body: { status: sel.value } });
+            await request(`/admin/documents/${id}`, {
+              method: "PUT",
+              body: { status: sel.value },
+            });
             if (doc) doc.status = sel.value;
             toast("Status diperbarui");
           } catch (err) {
