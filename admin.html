@@ -3272,7 +3272,8 @@
                     .join("")}
                 </select>
                 <div class="actions">
-                                    ${d.type === "invoice" || d.type === "quote" ? `<a class="btn btn-sm" href="dokumen.html?id=${d.id}" target="_blank" rel="noopener">Cetak</a>` : ""}
+                  ${d.type === "invoice" || d.type === "quote" ? `<a class="btn btn-sm" href="dokumen.html?id=${d.id}" target="_blank" rel="noopener">Cetak</a>` : ""}
+                  <button class="btn btn-sm" data-dedit="${d.id}" type="button">Edit</button>
                   <button class="btn btn-sm btn-danger" data-ddel="${d.id}" type="button">Hapus</button>
                 </div>
               </div>`,
