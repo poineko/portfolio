@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Formulir Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root { --ink: #1b1d22; --muted: #6a707c; --line: #dfe3ea; --accent: #2b5fb3; --bg: #f4f6fa; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; padding: 24px 16px 60px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+  h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .lead { color: var(--muted); margin-bottom: 24px; }
+  .q { margin-bottom: 22px; }
+  .ql { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .help { font-weight: 400; color: var(--muted); font-size: 12px; }
+  input[type="text"], textarea { width: 100%; font: inherit; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+  textarea { min-height: 90px; resize: vertical; }
+  input[type="text"]:focus, textarea:focus { outline: 2px solid rgba(43, 95, 179, 0.3); border-color: var(--accent); }
+  .opts { display: grid; gap: 8px; }
+  .opt { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 14px; }
+  .opt input { accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; }
+  .btn { width: 100%; padding: 14px; border: 0; border-radius: 12px; background: var(--accent); color: #fff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .err { color: #b42318; font-size: 14px; margin-bottom: 12px; }
+  .center { text-align: center; padding: 24px 0; }
+  .center h1 { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card" id="card"><p class="lead">Memuat formulir…</p></div></div>
+
+<script src="js/config.js"></script>
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const API = String((window.APP_CONFIG && window.APP_CONFIG.API_BASE_URL) || "").replace(/\/$/, "");
+  const token = new URLSearchParams(location.search).get("t");
+
+  const QUESTIONS = [
+    { id: "biz", label: "Nama usaha atau proyek", type: "text", required: true },
+    { id: "about", label: "Ceritakan singkat tentang usaha atau kegiatanmu", type: "textarea" },
+    { id: "goal", label: "Apa tujuan utama website atau aplikasi ini?", type: "check",
+      options: ["Memperkenalkan usaha", "Menerima pesanan lewat WhatsApp", "Menampilkan katalog atau menu", "Berjualan online", "Mengelola data atau sistem internal", "Lainnya"] },
+    { id: "target", label: "Siapa pelanggan atau pengunjung utamamu?", type: "textarea" },
+    { id: "features", label: "Halaman atau fitur yang dibutuhkan", type: "check",
+      options: ["Beranda", "Tentang kami", "Menu atau produk", "Galeri foto", "Kontak dan peta", "Blog atau berita", "Pemesanan via WhatsApp", "Admin untuk mengelola konten", "Lainnya"] },
+    { id: "refs", label: "Website atau akun media sosial yang kamu sukai", help: "Boleh lebih dari satu, tulis tautannya", type: "textarea" },
+    { id: "style", label: "Gaya tampilan yang kamu suka", type: "radio",
+      options: ["Modern dan bersih", "Hangat dan ramah", "Elegan dan premium", "Ceria dan berwarna", "Belum tahu"] },
+    { id: "brand", label: "Warna utama atau logo yang dipakai", type: "text" },
+    { id: "assets", label: "Materi yang sudah kamu punya", type: "check",
+      options: ["Logo", "Foto produk atau usaha", "Teks atau deskripsi", "Daftar harga atau menu", "Belum ada"] },
+    { id: "domain", label: "Apakah sudah punya domain (alamat website)?", type: "radio", options: ["Sudah punya", "Belum punya", "Tidak tahu"] },
+    { id: "domainName", label: "Nama domain (jika sudah punya)", type: "text" },
+    { id: "deadline", label: "Kapan website ditargetkan selesai?", type: "text" },
+    { id: "budget", label: "Perkiraan anggaran", help: "Opsional, membantu kami menyesuaikan paket", type: "text" },
+    { id: "notes", label: "Catatan lain", type: "textarea" },
+  ];
+
+  const show = (html) => ($("#card").innerHTML = html);
+  const done = (title, text) => show(`<div class="center"><h1>${esc(title)}</h1><p class="lead">${esc(text)}</p></div>`);
+
+  function field(q) {
+    const help = q.help ? ` <span class="help">— ${esc(q.help)}</span>` : "";
+    const label = `<span class="ql">${esc(q.label)}${q.required ? " *" : ""}${help}</span>`;
+    if (q.type === "textarea") return `<div class="q"><label>${label}<textarea name="${q.id}"></textarea></label></div>`;
+    if (q.type === "text") return `<div class="q"><label>${label}<input type="text" name="${q.id}" maxlength="300"></label></div>`;
+    const kind = q.type === "check" ? "checkbox" : "radio";
+    const opts = q.options
+      .map((o) => `<label class="opt"><input type="${kind}" name="${q.id}" value="${esc(o)}"> ${esc(o)}</label>`)
+      .join("");
+    return `<div class="q"><span class="ql">${esc(q.label)}${help}</span><div class="opts">${opts}</div></div>`;
+  }
+
+  function render(info) {
+    show(`
+      <h1>Brief proyek</h1>
+      <p class="lead">Halo ${esc(info.clientName)}, isi formulir singkat ini agar ${esc(info.businessName)} memahami kebutuhanmu. Sekitar 5 menit. Isi yang kamu tahu saja, sisanya bisa dibahas lewat chat.</p>
+      <form id="f" novalidate>
+        ${QUESTIONS.map(field).join("")}
+        <p class="err" id="err" hidden></p>
+        <button class="btn" id="send" type="submit">Kirim jawaban</button>
+      </form>`);
+    $("#f").addEventListener("submit", submit);
+  }
+
+  function collect() {
+    const form = $("#f");
+    return QUESTIONS.map((q) => {
+      let value = "";
+      if (q.type === "text" || q.type === "textarea") value = form.elements[q.id].value.trim();
+      else if (q.type === "radio") {
+        const r = form.querySelector(`input[name="${q.id}"]:checked`);
+        value = r ? r.value : "";
+      } else value = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map((i) => i.value).join(", ");
+      return { label: q.label, value, required: q.required };
+    });
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    const err = $("#err");
+    err.hidden = true;
+    const all = collect();
+    if (all.some((i) => i.required && !i.value)) {
+      err.textContent = "Nama usaha atau proyek wajib diisi.";
+      err.hidden = false;
+      return;
+    }
+    const items = all.filter((i) => i.value).map((i) => ({ label: i.label, value: i.value }));
+    const btn = $("#send");
+    btn.disabled = true;
+    btn.textContent = "Mengirim…";
+    try {
+      const res = await fetch(`${API}/brief/${encodeURIComponent(token)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Gagal mengirim, coba lagi.");
+      done("Terima kasih!", "Jawabanmu sudah terkirim. Kami akan segera menghubungimu.");
+    } catch (ex) {
+      err.textContent = ex.message;
+      err.hidden = false;
+      btn.disabled = false;
+      btn.textContent = "Kirim jawaban";
+    }
+  }
+
+  async function main() {
+    if (!token) return done("Link tidak valid", "Minta link formulir yang benar kepada kami.");
+    try {
+      const res = await fetch(`${API}/brief/${encodeURIComponent(token)}`);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 404) return done("Formulir tidak ditemukan", "Link ini tidak valid atau sudah tidak berlaku.");
+      if (!res.ok) throw new Error(data.error || "Gagal memuat.");
+      if (data.answered) return done("Sudah terkirim", "Formulir ini sudah kamu isi. Terima kasih!");
+      render(data);
+    } catch {
+      done("Gagal memuat formulir", "Periksa koneksi internetmu lalu muat ulang halaman ini.");
+    }
+  }
+  main();
+})();
+</script>
+</body>
+</html>

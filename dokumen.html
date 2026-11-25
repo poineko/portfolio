@@ -78,6 +78,14 @@
   .stamp { position: absolute; top: 46mm; right: 17mm; transform: rotate(-12deg); border: 3px solid; padding: 4px 16px; font-size: 20px; font-weight: 800; letter-spacing: 0.12em; opacity: 0.8; border-radius: 6px; }
   .stamp.ok { color: #1a7f4b; }
   .stamp.void { color: #b42318; }
+  .qris { display: block; width: 130px; height: 130px; object-fit: contain; margin-top: 8px; border: 1px solid var(--line); border-radius: 6px; padding: 4px; background: #fff; }
+  .parties { margin: 18px 0 6px; }
+  .parties p { margin-bottom: 8px; }
+  .pasal { margin-top: 12px; break-inside: avoid; }
+  .pasal h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .pasal p { margin-bottom: 4px; }
+  .sign2 { display: flex; justify-content: space-between; gap: 20px; margin-top: 30px; break-inside: avoid; }
+  .sign2 > div { width: 46%; text-align: center; }
 
   @media screen and (max-width: 800px) {
     .sheet { width: 100%; min-height: auto; padding: 22px 18px; }
@@ -139,7 +147,7 @@
     return w.charAt(0).toUpperCase() + w.slice(1) + " rupiah";
   };
 
-  const STAMP = { paid: ["LUNAS", "ok"], accepted: ["DISETUJUI", "ok"], cancelled: ["DIBATALKAN", "void"], rejected: ["DITOLAK", "void"] };
+   const STAMP = { paid: ["LUNAS", "ok"], accepted: ["DISETUJUI", "ok"], signed: ["DITANDATANGANI", "ok"], cancelled: ["DIBATALKAN", "void"], rejected: ["DITOLAK", "void"] };
   const stamp = (st) => (STAMP[st] ? `<div class="stamp ${STAMP[st][1]}">${STAMP[st][0]}</div>` : "");
 
   function top(p, label, rows) {
@@ -222,7 +230,7 @@
           ${dp ? `<tr><td>Uang muka (DP) ${dp}%</td><td>${rp(dpAmt)}</td></tr><tr><td>Sisa pembayaran</td><td>${rp(total - dpAmt)}</td></tr>` : ""}
         </table>
         <p class="words"><span class="lbl">Terbilang</span>${esc(kata(total))}</p>
-        ${p.paymentInfo ? `<section class="box"><div class="lbl">Pembayaran</div><div>${nl(p.paymentInfo)}</div></section>` : ""}
+                ${p.paymentInfo || p.qrisUrl ? `<section class="box"><div class="lbl">Pembayaran</div>${p.paymentInfo ? `<div>${nl(p.paymentInfo)}</div>` : ""}${p.qrisUrl ? `<img class="qris" src="${esc(p.qrisUrl)}" alt="QRIS">` : ""}</section>` : ""}
         ${d.notes ? `<section class="box"><div class="lbl">Catatan</div><div>${nl(d.notes)}</div></section>` : ""}
         ${signature(p, doc)}
         ${footer(p)}
@@ -261,6 +269,50 @@
       </article>`;
   }
 
+    function contractHTML(doc, p) {
+    const d = doc.data || {};
+    const c = doc.client;
+    const name = p.businessName || "ARTech by Poi";
+    const total = num(d.total);
+    const dp = Math.min(100, Math.max(0, num(d.dpPercent)));
+    const dpAmt = Math.round((total * dp) / 100);
+    const scope = (Array.isArray(d.scope) ? d.scope : []).filter(Boolean);
+    const pay = p.paymentInfo;
+    const place = p.city || "";
+    const second = c.business ? `${esc(c.business)}, dalam hal ini diwakili oleh ${esc(c.name)}` : esc(c.name);
+    const pasal = [
+      ["Lingkup Pekerjaan", `<p>Pihak Pertama mengerjakan proyek <b>${esc(d.projectName || "sesuai kesepakatan")}</b> untuk Pihak Kedua dengan lingkup:</p>${scope.length ? `<ol class="scope">${scope.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}<p>Pekerjaan di luar lingkup tersebut dihitung sebagai pekerjaan tambahan dan disepakati terpisah.</p>`],
+      ["Biaya dan Pembayaran", `<p>Nilai pekerjaan adalah <b>${rp(total)}</b> (${esc(kata(total))}).${dp ? ` Pembayaran dilakukan dengan uang muka ${dp}% sebesar <b>${rp(dpAmt)}</b> sebelum pekerjaan dimulai, dan pelunasan sebesar <b>${rp(total - dpAmt)}</b> paling lambat saat serah terima hasil pekerjaan.` : " Pembayaran dilunasi paling lambat saat serah terima hasil pekerjaan."}</p>${pay ? `<p>Pembayaran ditujukan ke:<br>${nl(pay)}</p>` : ""}`],
+      ["Jangka Waktu", `<p>${d.duration ? `Estimasi waktu pengerjaan adalah ${esc(d.duration)}.` : "Jangka waktu pengerjaan disepakati oleh kedua pihak."} Waktu pengerjaan dapat bergeser apabila Pihak Kedua terlambat menyediakan materi atau memberikan tanggapan.</p>`],
+      ["Revisi", `<p>Pihak Kedua berhak atas ${num(d.revisions)} kali revisi dalam lingkup pekerjaan. Revisi tambahan atau perubahan lingkup dikenakan biaya tambahan yang disepakati terlebih dahulu.</p>`],
+      ["Kewajiban Pihak Kedua", `<p>Pihak Kedua menyediakan materi yang dibutuhkan (misalnya teks, logo, foto, dan akses yang diperlukan) serta memberikan tanggapan dalam waktu yang wajar.</p>`],
+      ["Hak Atas Hasil Pekerjaan", `<p>Setelah pelunasan, Pihak Kedua berhak menggunakan hasil pekerjaan untuk keperluan usahanya. Pihak Pertama dapat mencantumkan hasil pekerjaan dalam portofolio, kecuali Pihak Kedua menyatakan keberatan secara tertulis.</p>`],
+      ["Kerahasiaan", `<p>Kedua pihak menjaga kerahasiaan data dan informasi yang diperoleh selama pelaksanaan pekerjaan ini.</p>`],
+      ["Pembatalan", `<p>Apabila pekerjaan dibatalkan oleh Pihak Kedua setelah dimulai, uang muka yang telah dibayarkan tidak dikembalikan dan pekerjaan yang telah selesai dihitung secara proporsional.</p>`],
+      ["Penyelesaian Perselisihan", `<p>Perselisihan diselesaikan secara musyawarah. Apabila tidak tercapai kesepakatan, kedua pihak memilih domisili hukum di ${esc(place || "tempat Pihak Pertama berkedudukan")}.</p>`],
+    ];
+    if (d.extra) pasal.push(["Ketentuan Tambahan", `<p>${nl(d.extra)}</p>`]);
+    const isi = pasal.map(([t, html], i) => `<section class="pasal"><h4>Pasal ${i + 1} — ${t}</h4>${html}</section>`).join("");
+    return `
+      <article class="sheet">
+        ${stamp(doc.status)}
+        ${top(p, "KONTRAK", [["Nomor", esc(doc.number)], ["Tanggal", tgl(doc.issuedAt)]])}
+        <section class="parties">
+          <p><b>PERJANJIAN KERJA SAMA${d.projectName ? " — " + esc(String(d.projectName).toUpperCase()) : ""}</b></p>
+          <p>Pada ${tgl(doc.issuedAt)}${place ? ", di " + esc(place) : ""}, yang bertanda tangan di bawah ini:</p>
+          <p><b>1. ${esc(p.ownerName || name)}</b>, ${p.ownerName ? `pemilik ${esc(name)}, ` : ""}${p.address ? "beralamat di " + esc(p.address) + ", " : ""}selanjutnya disebut <b>Pihak Pertama</b>.</p>
+          <p><b>2. ${second}</b>${c.address ? ", beralamat di " + esc(c.address) : ""}, selanjutnya disebut <b>Pihak Kedua</b>.</p>
+          <p>Kedua pihak sepakat mengikatkan diri dalam perjanjian dengan ketentuan berikut:</p>
+        </section>
+        ${isi}
+        <section class="sign2">
+          <div><div>Pihak Pertama</div><div class="sign-space"></div><div class="strong">${esc(p.ownerName || name)}</div></div>
+          <div><div>Pihak Kedua</div><div class="sign-space"></div><div class="strong">${esc(c.name)}</div>${c.business ? `<div class="muted">${esc(c.business)}</div>` : ""}</div>
+        </section>
+        ${footer(p)}
+      </article>`;
+  }
+
   const showMessage = (html) => {
     $("#root").innerHTML = `<div class="msg">${html}</div>`;
   };
@@ -291,7 +343,8 @@
       let html;
       if (doc.type === "invoice") html = invoiceHTML(doc, p);
       else if (doc.type === "quote") html = quoteHTML(doc, p);
-      else return showMessage("Cetak untuk kontrak dan brief menyusul.");
+      else if (doc.type === "contract") html = contractHTML(doc, p);
+      else return showMessage("Dokumen jenis ini tidak memiliki tampilan cetak.");
       document.title = `${doc.number} - ${doc.client.name}`;
       $("#root").innerHTML = html;
       $("#printBtn").disabled = false;

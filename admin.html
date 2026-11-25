@@ -1029,11 +1029,26 @@
       }
       .drow {
         display: grid;
-        grid-template-columns: 1.2fr 1.2fr 150px 200px;
+        grid-template-columns: 1.2fr 1.2fr 150px 300px;
         gap: 16px;
         align-items: center;
         padding: 14px 18px;
         border-top: 0.5px solid var(--border);
+      }
+      .b-ans div {
+        padding: 10px 0;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .b-ans dt {
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .b-ans dd {
+        margin-top: 2px;
+        font-size: 14px;
       }
       .drow:first-child {
         border-top: 0;
@@ -1445,6 +1460,8 @@
               </button>
               <button
                 class="btn btn-sm btn-primary"
+              <button class="btn btn-sm" id="d_newContract" type="button">+ Kontrak</button>
+              <button class="btn btn-sm" id="d_newBrief" type="button">+ Brief</button>
                 id="d_newInvoice"
                 type="button"
               >
@@ -3272,7 +3289,8 @@
                     .join("")}
                 </select>
                 <div class="actions">
-                  ${d.type === "invoice" || d.type === "quote" ? `<a class="btn btn-sm" href="dokumen.html?id=${d.id}" target="_blank" rel="noopener">Cetak</a>` : ""}
+                  ${["invoice", "quote", "contract"].includes(d.type) ? `<a class="btn btn-sm" href="dokumen.html?id=${d.id}" target="_blank" rel="noopener">Cetak</a>` : ""}
+                  ${d.type === "brief" ? `<button class="btn btn-sm" data-dlink="${d.token}" type="button">Salin link</button>` : ""}
                   <button class="btn btn-sm" data-dedit="${d.id}" type="button">Edit</button>
                   <button class="btn btn-sm btn-danger" data-ddel="${d.id}" type="button">Hapus</button>
                 </div>
@@ -3285,6 +3303,7 @@
         /* jendela form */
         function openDocModal(title, html) {
           $("#dTitle").textContent = title;
+           $("#dSave").textContent = "Simpan";
           $("#dFields").innerHTML = html;
           dm.hidden = false;
           document.body.style.overflow = "hidden";
@@ -3499,17 +3518,34 @@
             const s = await request("/admin/settings");
             const p = s.docProfile || {};
             dstate.mode = "profile";
-            openDocModal(
-              "Pengaturan usaha",
-              PROFILE_FIELDS.map(([k, label, type]) =>
-                type === "textarea"
-                  ? `<label class="field"><span>${label}</span><textarea id="p_${k}">${esc(p[k] || "")}</textarea></label>`
-                  : `<label class="field"><span>${label}</span><input type="text" id="p_${k}" value="${esc(p[k] || "")}"></label>`,
-              ).join(""),
-            );
+            const fields = PROFILE_FIELDS.map(([k, label, type]) =>
+              type === "textarea"
+                ? `<label class="field"><span>${label}</span><textarea id="p_${k}">${esc(p[k] || "")}</textarea></label>`
+                : `<label class="field"><span>${label}</span><input type="text" id="p_${k}" value="${esc(p[k] || "")}"></label>`,
+            ).join("");
+            const qris = `
+              <div class="field">
+                <span>Gambar QRIS <i class="hint">— opsional, tampil di invoice</i></span>
+                <div class="thumb-preview" id="p_qrisPreview" style="aspect-ratio:1;max-width:200px"></div>
+                <div class="inline" style="margin-top:8px">
+                  <button type="button" class="btn btn-sm btn-ghost" id="p_qrisUpload">Upload gambar QRIS</button>
+                  <button type="button" class="btn btn-sm" id="p_qrisClear">Hapus</button>
+                </div>
+                <input type="hidden" id="p_qrisUrl" value="${esc(p.qrisUrl || "")}">
+                <input type="file" id="p_qrisFile" accept="image/jpeg,image/png,image/webp" hidden>
+              </div>`;
+            openDocModal("Pengaturan usaha", fields + qris);
+            renderQrisPreview();
           } catch (err) {
             toast(err.message, "error");
           }
+        }
+
+        async function saveProfile() {
+          const body = {};
+          PROFILE_FIELDS.forEach(([k]) => (body[k] = $("#p_" + k).value.trim()));
+          body.qrisUrl = $("#p_qrisUrl").value;
+          await request("/admin/settings/docProfile", { method: "PUT", body });
         }
 
         async function saveProfile() {
@@ -3554,11 +3590,14 @@
           const btn = $("#dSave");
           setLoading(btn, true, "Menyimpan...");
           try {
+            if (mode === "answers") return closeDocModal();
             if (mode === "invoice") await saveInvoice();
             else if (mode === "profile") await saveProfile();
+            else if (mode === "contract") await saveContract();
+            else if (mode === "brief") await createBrief();
             closeDocModal();
             toast("Tersimpan");
-            if (mode === "invoice") loadDocs();
+            if (["invoice", "contract", "brief"].includes(mode)) loadDocs();
           } catch (err) {
             toast(err.message, "error");
           } finally {
@@ -3587,11 +3626,8 @@
               const doc = await request(`/admin/documents/${ed.dataset.dedit}`);
               if (doc.type === "invoice") openInvoiceForm(doc);
               else if (doc.type === "quote") openQuoteInCalculator(doc);
-              else
-                toast(
-                  "Editor kontrak dan brief menyusul di langkah berikutnya",
-                  "error",
-                );
+                            else if (doc.type === "contract") openContractForm(doc);
+              else if (doc.type === "brief") openBriefAnswers(doc);
             } catch (err) {
               toast(err.message, "error");
             }
@@ -3633,6 +3669,196 @@
             toast(err.message, "error");
           } finally {
             sel.disabled = false;
+          }
+        });
+
+                /* ───────── QRIS, Kontrak, Brief ───────── */
+        const clientOptions = (selectedId) =>
+          dstate.clients
+            .map(
+              (c) =>
+                `<option value="${c.id}"${c.id === selectedId ? " selected" : ""}>${esc(c.name)}${c.business ? " — " + esc(c.business) : ""}</option>`,
+            )
+            .join("");
+
+        /* QRIS */
+        function renderQrisPreview() {
+          const box = $("#p_qrisPreview");
+          if (!box) return;
+          const url = $("#p_qrisUrl").value;
+          box.innerHTML = isHttp(url) ? `<img src="${esc(url)}" alt="QRIS" style="object-fit:contain">` : "Belum ada gambar";
+        }
+
+        /* Kontrak */
+        function contractFormHTML(doc) {
+          const d = (doc && doc.data) || {};
+          return `
+            <label class="field"><span>Klien *</span><select id="k_client">${clientOptions(doc && doc.clientId)}</select></label>
+            <label class="field"><span>Isi dari penawaran <i class="hint">— nama proyek, lingkup, dan harga</i></span><select id="k_quote"><option value="">— tidak, isi manual —</option></select></label>
+            <label class="field"><span>Tanggal kontrak</span><input type="date" id="k_issued" value="${esc(doc ? doc.issuedAt : todayWIB())}"></label>
+            <label class="field"><span>Nama proyek</span><input type="text" id="k_project" maxlength="200" value="${esc(d.projectName || "")}"></label>
+            <label class="field"><span>Lingkup pekerjaan <i class="hint">— satu baris = satu poin</i></span><textarea id="k_scope" style="min-height:120px">${esc((d.scope || []).join("\n"))}</textarea></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <label class="field"><span>Nilai kontrak (Rp)</span><input type="number" id="k_total" min="0" value="${qn(d.total)}"></label>
+              <label class="field"><span>Uang muka (DP) %</span><input type="number" id="k_dp" min="0" max="100" value="${qn(d.dpPercent)}"></label>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <label class="field"><span>Estimasi durasi</span><input type="text" id="k_duration" maxlength="120" placeholder="mis. 4 minggu sejak DP diterima" value="${esc(d.duration || "")}"></label>
+              <label class="field"><span>Jumlah revisi</span><input type="number" id="k_revisions" min="0" value="${d.revisions != null ? qn(d.revisions) : 2}"></label>
+            </div>
+            <label class="field"><span>Ketentuan tambahan <i class="hint">— opsional</i></span><textarea id="k_extra" style="min-height:80px">${esc(d.extra || "")}</textarea></label>`;
+        }
+
+        function openContractForm(doc) {
+          if (!dstate.clients.length) {
+            toast("Tambah klien dulu di tab Klien", "error");
+            return;
+          }
+          dstate.mode = "contract";
+          dstate.editId = doc ? doc.id : null;
+          dstate.quoteRef = doc && doc.data.quoteId ? { id: doc.data.quoteId, number: doc.data.quoteNumber } : null;
+          openDocModal(doc ? `Edit ${doc.number}` : "Kontrak baru", contractFormHTML(doc));
+          loadContractQuotes();
+        }
+
+        async function loadContractQuotes() {
+          const cid = Number($("#k_client") && $("#k_client").value);
+          if (!cid) return;
+          try {
+            const quotes = await request(`/admin/documents?type=quote&clientId=${cid}`);
+            const sel = $("#k_quote");
+            if (!sel) return;
+            const usable = quotes.filter((q) => q.status !== "cancelled" && q.status !== "rejected");
+            sel.innerHTML =
+              `<option value="">${usable.length ? "— pilih penawaran —" : "— klien ini belum punya penawaran —"}</option>` +
+              usable
+                .map((q) => `<option value="${q.id}">${esc(q.number)} · ${esc(q.issuedAt)} · ${STATUS_LABEL[q.status]}</option>`)
+                .join("");
+          } catch {
+            /* abaikan */
+          }
+        }
+
+        async function applyQuoteToContract(id) {
+          try {
+            const q = await request(`/admin/documents/${id}`);
+            const d = q.data || {};
+            if (d.projectName) $("#k_project").value = d.projectName;
+            $("#k_scope").value = (Array.isArray(d.modules) ? d.modules : [])
+              .map((m) => m.name)
+              .filter(Boolean)
+              .join("\n");
+            $("#k_total").value = d.finalTotal ?? 0;
+            dstate.quoteRef = { id: q.id, number: q.number };
+            toast(`Diisi dari ${q.number}`);
+          } catch (err) {
+            toast(err.message, "error");
+          }
+        }
+
+        async function saveContract() {
+          const clientId = Number($("#k_client").value);
+          if (!clientId) throw new Error("Pilih klien dulu");
+          const total = qn($("#k_total").value);
+          if (!total) throw new Error("Isi nilai kontrak");
+          const data = {
+            projectName: $("#k_project").value.trim(),
+            scope: $("#k_scope").value.split("\n").map((s) => s.trim()).filter(Boolean),
+            total,
+            dpPercent: Math.min(100, Math.max(0, qn($("#k_dp").value))),
+            duration: $("#k_duration").value.trim(),
+            revisions: qn($("#k_revisions").value),
+            extra: $("#k_extra").value.trim(),
+            quoteId: dstate.quoteRef ? dstate.quoteRef.id : null,
+            quoteNumber: dstate.quoteRef ? dstate.quoteRef.number : "",
+          };
+          const issuedAt = $("#k_issued").value || undefined;
+          if (dstate.editId)
+            await request(`/admin/documents/${dstate.editId}`, { method: "PUT", body: { clientId, issuedAt, data } });
+          else await request("/admin/documents", { method: "POST", body: { type: "contract", clientId, issuedAt, data } });
+        }
+
+        /* Brief */
+        const briefLink = (token) => new URL("brief.html?t=" + encodeURIComponent(token), location.href).href;
+
+        function openBriefForm() {
+          if (!dstate.clients.length) {
+            toast("Tambah klien dulu di tab Klien", "error");
+            return;
+          }
+          dstate.mode = "brief";
+          dstate.editId = null;
+          openDocModal(
+            "Brief baru",
+            `<label class="field"><span>Klien *</span><select id="b_client">${clientOptions()}</select></label>
+             <p class="hint">Setelah dibuat, klik "Salin link" di daftar lalu kirim ke klien lewat WhatsApp.</p>`,
+          );
+        }
+
+        async function createBrief() {
+          const clientId = Number($("#b_client").value);
+          if (!clientId) throw new Error("Pilih klien dulu");
+          await request("/admin/documents", { method: "POST", body: { type: "brief", clientId } });
+        }
+
+        function openBriefAnswers(doc) {
+          dstate.mode = "answers";
+          const items = (doc.answers && doc.answers.items) || [];
+          const answers = items.length
+            ? `<dl class="b-ans">${items
+                .map((i) => `<div><dt>${esc(i.label)}</dt><dd>${esc(i.value || "—").replace(/\n/g, "<br>")}</dd></div>`)
+                .join("")}</dl>`
+            : `<p class="muted">Belum diisi klien. Kirim link di bawah ke klien.</p>`;
+          openDocModal(
+            `Brief ${doc.number} — ${doc.client.name}`,
+            `<p class="hint" style="margin-bottom:6px">Link untuk klien</p>
+             <input type="text" readonly value="${esc(briefLink(doc.token))}" style="margin-bottom:16px">
+             ${answers}`,
+          );
+          $("#dSave").textContent = "Tutup";
+        }
+
+        /* event tambahan */
+        dm.addEventListener("click", (e) => {
+          if (e.target.closest("#p_qrisUpload")) $("#p_qrisFile").click();
+          else if (e.target.closest("#p_qrisClear")) {
+            $("#p_qrisUrl").value = "";
+            renderQrisPreview();
+          }
+        });
+
+        dm.addEventListener("change", async (e) => {
+          const t = e.target;
+          if (t.id === "k_client") return loadContractQuotes();
+          if (t.id === "k_quote" && t.value) return applyQuoteToContract(Number(t.value));
+          if (t.id !== "p_qrisFile") return;
+          const file = t.files[0];
+          t.value = "";
+          if (!file) return;
+          const btn = $("#p_qrisUpload");
+          setLoading(btn, true, "Upload...");
+          try {
+            $("#p_qrisUrl").value = await uploadFile(file);
+            renderQrisPreview();
+            toast("QRIS terupload. Klik Simpan untuk menerapkan.");
+          } catch (err) {
+            toast(err.message, "error");
+          } finally {
+            setLoading(btn, false);
+          }
+        });
+
+        $("#docsView").addEventListener("click", async (e) => {
+          if (e.target.closest("#d_newContract")) return openContractForm();
+          if (e.target.closest("#d_newBrief")) return openBriefForm();
+          const lk = e.target.closest("[data-dlink]");
+          if (lk) {
+            try {
+              await navigator.clipboard.writeText(briefLink(lk.dataset.dlink));
+              toast("Link brief disalin. Kirim ke klien lewat WhatsApp.");
+            } catch {
+              toast("Gagal menyalin", "error");
+            }
           }
         });
 
