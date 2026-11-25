@@ -1458,10 +1458,14 @@
               <button class="btn btn-sm" id="d_newQuote" type="button">
                 + Penawaran
               </button>
+              <button class="btn btn-sm" id="d_newContract" type="button">
+                + Kontrak
+              </button>
+              <button class="btn btn-sm" id="d_newBrief" type="button">
+                + Brief
+              </button>
               <button
                 class="btn btn-sm btn-primary"
-              <button class="btn btn-sm" id="d_newContract" type="button">+ Kontrak</button>
-              <button class="btn btn-sm" id="d_newBrief" type="button">+ Brief</button>
                 id="d_newInvoice"
                 type="button"
               >
@@ -3303,7 +3307,7 @@
         /* jendela form */
         function openDocModal(title, html) {
           $("#dTitle").textContent = title;
-           $("#dSave").textContent = "Simpan";
+          $("#dSave").textContent = "Simpan";
           $("#dFields").innerHTML = html;
           dm.hidden = false;
           document.body.style.overflow = "hidden";
@@ -3626,7 +3630,7 @@
               const doc = await request(`/admin/documents/${ed.dataset.dedit}`);
               if (doc.type === "invoice") openInvoiceForm(doc);
               else if (doc.type === "quote") openQuoteInCalculator(doc);
-                            else if (doc.type === "contract") openContractForm(doc);
+              else if (doc.type === "contract") openContractForm(doc);
               else if (doc.type === "brief") openBriefAnswers(doc);
             } catch (err) {
               toast(err.message, "error");
