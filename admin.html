@@ -3552,14 +3552,6 @@
           await request("/admin/settings/docProfile", { method: "PUT", body });
         }
 
-        async function saveProfile() {
-          const body = {};
-          PROFILE_FIELDS.forEach(
-            ([k]) => (body[k] = $("#p_" + k).value.trim()),
-          );
-          await request("/admin/settings/docProfile", { method: "PUT", body });
-        }
-
         /* event */
         dm.addEventListener("click", (e) => {
           if (e.target.closest("[data-dclose]")) return closeDocModal();
